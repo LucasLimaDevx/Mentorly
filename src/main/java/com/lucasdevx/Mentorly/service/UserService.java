@@ -1,5 +1,7 @@
 package com.lucasdevx.Mentorly.service;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
@@ -22,12 +24,14 @@ public class UserService {
 		user.setFullName(request.getFullName());
 		user.setEmail(request.getEmail());
 		user.setPassword(request.getPassword());
-		user.setCreatedAt(request.getCreatedAt());
-		user.setUpdatedAt(request.getUpdatedAt());
-		user.setActive(request.isActive());
+		user.setCreatedAt(new Date());
+		user.setUpdatedAt(new Date());
+		user.setActive(true);
 		
-		return new UserResponseDTO(user);
+		User userPersisted = userRepository.save(user);
+		UserResponseDTO response = new UserResponseDTO(userPersisted);
+		
+		return response;
 	}
-	
 	
 }

@@ -1,7 +1,6 @@
 package com.lucasdevx.Mentorly.dto.request;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +18,5 @@ public class UserRequestDTO implements Serializable{
 	private String fullName;
 	private String email;
 	private String password;
-	private Date createdAt;
-	private Date updatedAt;
-	private boolean active;
 
 }
