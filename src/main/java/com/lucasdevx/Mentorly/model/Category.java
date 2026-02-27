@@ -1,7 +1,5 @@
 package com.lucasdevx.Mentorly.model;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,9 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_categories")
-public class Category implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class Category{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

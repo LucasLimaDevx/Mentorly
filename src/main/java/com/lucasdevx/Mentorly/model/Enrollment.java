@@ -1,6 +1,5 @@
 package com.lucasdevx.Mentorly.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -8,8 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-public class Enrollment  implements Serializable{
-private static final long serialVersionUID = 1L;
+public class Enrollment {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

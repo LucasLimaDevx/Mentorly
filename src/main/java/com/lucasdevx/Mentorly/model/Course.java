@@ -1,6 +1,5 @@
 package com.lucasdevx.Mentorly.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -20,9 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_courses")
-public class Course implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class Course {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
