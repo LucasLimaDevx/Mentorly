@@ -22,7 +22,8 @@ public class UserService {
 	public UserResponseDTO create(UserRequestDTO request) {
 		User user = new User();
 		
-		user.setFullName(request.getFullName());
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
 		user.setEmail(request.getEmail());
 		user.setPassword(request.getPassword());
 		user.setCreatedAt(new Date());
@@ -58,10 +59,16 @@ public class UserService {
 		User userPersisted = userRepository.findById(id).orElseThrow(
 				()-> new IllegalArgumentException("Invalid ID"));
 		
-		userPersisted.setFullName(request.getFullName());
+		if(request.getActive() != null) { 
+			userPersisted.setActive(request.getActive());
+		}
+		
+		userPersisted.setFirstName(request.getFirstName());
+		userPersisted.setLastName(request.getLastName());
 		userPersisted.setEmail(request.getEmail());
 		userPersisted.setPassword(request.getPassword());
 		userPersisted.setUpdatedAt(new Date());
+		
 		
 		
 		UserResponseDTO response = new UserResponseDTO(userRepository.save(userPersisted));

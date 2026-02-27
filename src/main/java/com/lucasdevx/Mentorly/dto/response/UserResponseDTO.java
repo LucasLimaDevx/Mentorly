@@ -16,7 +16,8 @@ public class UserResponseDTO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
-	private String fullName;
+	private String firstName;
+	private String lastName;
 	private String email;
 	private String password;
 	
@@ -29,7 +30,8 @@ public class UserResponseDTO implements Serializable{
 	
 	public UserResponseDTO(User user) {
 		this.id = user.getId();
-		this.fullName = user.getFullName();
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
 		this.createdAt = user.getCreatedAt();
