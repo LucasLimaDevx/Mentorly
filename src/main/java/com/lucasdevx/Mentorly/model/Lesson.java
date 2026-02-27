@@ -30,6 +30,8 @@ public class Lesson{
 	
 	@Column(name = "category_videoUrl", nullable = false, length = 500)
 	private String videoUrl;
+	
+	@Column(name = "category_lessonOrder", unique = true)
 	private int lessonOrder;
 	
 }
