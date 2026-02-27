@@ -20,10 +20,10 @@ public class UserResponseDTO implements Serializable{
 	private String email;
 	private String password;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date createdAt;
 	
-	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date updatedAt;
 	private boolean active;
 	
