@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
+import com.lucasdevx.Mentorly.mapper.UserMapper;
 import com.lucasdevx.Mentorly.model.User;
 import com.lucasdevx.Mentorly.repository.UserRepository;
 
@@ -14,24 +15,26 @@ import com.lucasdevx.Mentorly.repository.UserRepository;
 public class UserService {
 
 	private UserRepository userRepository;
-
-	public UserService(UserRepository userRepository) {
+	private UserMapper userMapper;
+	
+	public UserService(UserRepository userRepository, UserMapper userMapper) {
 		this.userRepository = userRepository;
+		this.userMapper = userMapper;
 	}
 	
 	public UserResponseDTO create(UserRequestDTO request) {
-		User user = new User();
 		
-		user.setFirstName(request.getFirstName());
-		user.setLastName(request.getLastName());
-		user.setEmail(request.getEmail());
-		user.setPassword(request.getPassword());
-		user.setCreatedAt(new Date());
-		user.setUpdatedAt(new Date());
+		User user = userMapper.converterToEntity(request);
+		
+		Date dateNow = new Date();
+		user.setCreatedAt(dateNow);
+		user.setUpdatedAt(dateNow);
+		
 		user.setActive(true);
 		
 		User userPersisted = userRepository.save(user);
-		UserResponseDTO response = new UserResponseDTO(userPersisted);
+		
+		UserResponseDTO response = userMapper.converterToDto(userPersisted);
 		
 		return response;
 	}
@@ -40,7 +43,7 @@ public class UserService {
 		User userPersisted = userRepository.findById(id)
 				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
 		
-		UserResponseDTO response = new UserResponseDTO(userPersisted);
+		UserResponseDTO response = userMapper.converterToDto(userPersisted);
 		
 		return response;
 	}
@@ -49,7 +52,7 @@ public class UserService {
 		List<User> usersPersisted = userRepository.findAll();
 		
 		List<UserResponseDTO> responsesDTO = usersPersisted.stream()
-				.map((response) -> new UserResponseDTO(response))
+				.map((response) -> userMapper.converterToDto(response))
 				.toList();
 		
 		return responsesDTO;
@@ -63,15 +66,9 @@ public class UserService {
 			userPersisted.setActive(request.getActive());
 		}
 		
-		userPersisted.setFirstName(request.getFirstName());
-		userPersisted.setLastName(request.getLastName());
-		userPersisted.setEmail(request.getEmail());
-		userPersisted.setPassword(request.getPassword());
-		userPersisted.setUpdatedAt(new Date());
+		User userUpdated = updateDate(userPersisted, request);
 		
-		
-		
-		UserResponseDTO response = new UserResponseDTO(userRepository.save(userPersisted));
+		UserResponseDTO response = userMapper.converterToDto(userRepository.save(userUpdated));
 		
 		return response;
 	}
@@ -83,4 +80,13 @@ public class UserService {
 		userRepository.deleteById(id);
 	}
 	
+	public User updateDate(User user, UserRequestDTO request) {
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
+		user.setEmail(request.getEmail());
+		user.setPassword(request.getPassword());
+		user.setUpdatedAt(new Date());
+		
+		return user;
+	}
 }
