@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.lucasdevx.Mentorly.model.Enrollment;
 
-public class EnrollmentRequestDTO implements Serializable{
+public class EnrollmentResponseDTO  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -13,7 +13,7 @@ public class EnrollmentRequestDTO implements Serializable{
 	private Date enrollmentDate;
 	private int progressPercentage;
 	
-	public EnrollmentRequestDTO(Enrollment enrollment) {
+	public EnrollmentResponseDTO(Enrollment enrollment) {
 		this.id = enrollment.getId();
 		this.enrollmentDate = enrollment.getEnrollmentDate();
 		this.progressPercentage = enrollment.getProgressPercentage();
