@@ -6,6 +6,11 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucasdevx.Mentorly.model.Certificate;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CertificateResponseDTO  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

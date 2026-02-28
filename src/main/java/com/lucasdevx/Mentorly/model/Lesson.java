@@ -22,16 +22,16 @@ public class Lesson{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "category_title", nullable = false, length = 255)
+	@Column(name = "lesson_title", nullable = false, length = 255)
 	private String title;
 	
-	@Column(name = "category_description", nullable = false, length = 255)
+	@Column(name = "lesson_description", nullable = false, length = 255)
 	private String description;
 	
-	@Column(name = "category_videoUrl", nullable = false, length = 500)
+	@Column(name = "lesson_videoUrl", nullable = false, length = 500)
 	private String videoUrl;
 	
-	@Column(name = "category_lessonOrder", unique = true)
+	@Column(name = "lesson_Order")
 	private int lessonOrder;
 	
 }

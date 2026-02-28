@@ -13,8 +13,7 @@ public class CourseMapper {
 		
 		course.setTitle(request.getTitle());
 		course.setWorkloadHours(request.getWorkloadHours());
-		course.setActive(request.getActive());
-		
+	
 		return course;
 	}
 	

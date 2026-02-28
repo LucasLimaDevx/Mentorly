@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import com.lucasdevx.Mentorly.model.Category;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CategoryResponseDTO implements Serializable{
 	
 	private static final long serialVersionUID = 1L;

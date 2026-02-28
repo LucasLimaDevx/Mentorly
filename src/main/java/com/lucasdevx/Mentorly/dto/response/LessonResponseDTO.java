@@ -4,6 +4,11 @@ import java.io.Serializable;
 
 import com.lucasdevx.Mentorly.model.Lesson;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class LessonResponseDTO  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
