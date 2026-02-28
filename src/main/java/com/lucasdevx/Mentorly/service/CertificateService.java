@@ -2,6 +2,8 @@ package com.lucasdevx.Mentorly.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.lucasdevx.Mentorly.dto.response.CertificateResponseDTO;
@@ -14,6 +16,7 @@ public class CertificateService {
 
 	private CertificateRepository certificateRepository;
 	private CertificateMapper certificateMapper;
+	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	public CertificateService(CertificateRepository certificateRepository, CertificateMapper certificateMapper) {
 		this.certificateRepository = certificateRepository;
@@ -39,21 +42,34 @@ public class CertificateService {
 	*/
 
 	public CertificateResponseDTO findById(Long id) {
+		logger.info(">>> Initializing the service's findById method.");
+		logger.info(">>> Searching for entity in database.");
+		
 		Certificate certificatePersisted = certificateRepository.findById(id)
 				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
 		
+		logger.info(">>> The entity was found.");
+		
 		CertificateResponseDTO response = certificateMapper.converterToDto(certificatePersisted);
+		
+		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
 	public List<CertificateResponseDTO> findAll() {
+		logger.info(">>> Initializing the service's findAll method.");
+		logger.info(">>> Searching for entities in the database.");
+		
 		List<Certificate> certificatesPersisted = certificateRepository.findAll();
+		
+		logger.info(">>> The entities have been discovered.");
 		
 		List<CertificateResponseDTO> responsesDTO = certificatesPersisted.stream()
 				.map((response) -> certificateMapper.converterToDto(response))
 				.toList();
 		
+		logger.info(">>> Returning response.");
 		return responsesDTO;
 	}	
 	
@@ -75,9 +91,13 @@ public class CertificateService {
 	*/
 	
 	public void delete(Long id) {
+		logger.info(">>> Initializing the service's delete method.");
+		
 		/*Certificate certificatePersisted = certificateRepository.findById(id)
 				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
 		*/
+		
+		logger.info(">>> Deleting Entity by ID");
 		certificateRepository.deleteById(id);
 	}
 	

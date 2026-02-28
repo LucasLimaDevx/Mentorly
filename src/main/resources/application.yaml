@@ -18,4 +18,4 @@ spring:
 
   logging:
     level:
-      com.lucasdevx.Mentorly: INFO
+      com.lucasdevx.Mentorly: DEBUG
