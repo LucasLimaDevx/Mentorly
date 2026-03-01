@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +32,10 @@ public class EnrollmentController {
 	}
 	
 	@PostMapping
-	public EnrollmentResponseDTO create(@RequestBody EnrollmentRequestDTO request) {
+	public EntityModel<EnrollmentResponseDTO> create(@RequestBody EnrollmentRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
-		EnrollmentResponseDTO response = enrollmentService.create(request);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
@@ -42,10 +43,10 @@ public class EnrollmentController {
 	}
 	
 	@GetMapping("/{id}")
-	public EnrollmentResponseDTO findById(@PathVariable Long id) {
+	public EntityModel<EnrollmentResponseDTO> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
-		EnrollmentResponseDTO response = enrollmentService.findById(id);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.findById(id);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
@@ -53,10 +54,10 @@ public class EnrollmentController {
 	}
 	
 	@GetMapping
-	public List<EnrollmentResponseDTO> findAll() {
+	public List<EntityModel<EnrollmentResponseDTO>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EnrollmentResponseDTO> responsesDTO = enrollmentService.findAll();
+		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll();
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
@@ -64,10 +65,10 @@ public class EnrollmentController {
 	}
 	
 	@PutMapping("/{id}")
-	public EnrollmentResponseDTO update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id) {
+	public EntityModel<EnrollmentResponseDTO> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
-		EnrollmentResponseDTO response = enrollmentService.update(request, id);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		

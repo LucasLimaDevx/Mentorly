@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +32,10 @@ public class CategoryController {
 	}
 	
 	@PostMapping
-	public CategoryResponseDTO create(@RequestBody CategoryRequestDTO request) {
+	public EntityModel<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
-		CategoryResponseDTO response = categoryService.create(request);
+		EntityModel<CategoryResponseDTO> response = categoryService.create(request);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
@@ -42,10 +43,10 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/{id}")
-	public CategoryResponseDTO findById(@PathVariable Long id) {
+	public EntityModel<CategoryResponseDTO> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
-		CategoryResponseDTO response = categoryService.findById(id);
+		EntityModel<CategoryResponseDTO> response = categoryService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		
@@ -53,10 +54,10 @@ public class CategoryController {
 	}
 	
 	@GetMapping
-	public List<CategoryResponseDTO> findAll() {
+	public List<EntityModel<CategoryResponseDTO>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<CategoryResponseDTO> responsesDTO = categoryService.findAll();
+		List<EntityModel<CategoryResponseDTO>> responsesDTO = categoryService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
@@ -64,10 +65,10 @@ public class CategoryController {
 	}
 	
 	@PutMapping("/{id}")
-	public CategoryResponseDTO update(@RequestBody CategoryRequestDTO request, @PathVariable Long id) {
+	public EntityModel<CategoryResponseDTO> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
-		CategoryResponseDTO response = categoryService.update(request, id);
+		EntityModel<CategoryResponseDTO> response = categoryService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
 		

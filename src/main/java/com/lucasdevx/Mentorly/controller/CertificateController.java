@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +29,10 @@ public class CertificateController {
 	
 	
 	@GetMapping("/{id}")
-	public CertificateResponseDTO findById(@PathVariable Long id) {
+	public EntityModel<CertificateResponseDTO> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
-		CertificateResponseDTO response = certificateService.findById(id);
+		EntityModel<CertificateResponseDTO> response = certificateService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		
@@ -39,10 +40,10 @@ public class CertificateController {
 	}
 	
 	@GetMapping
-	public List<CertificateResponseDTO> findAll() {
+	public List<EntityModel<CertificateResponseDTO>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<CertificateResponseDTO> responsesDTO = certificateService.findAll();
+		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificateService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
