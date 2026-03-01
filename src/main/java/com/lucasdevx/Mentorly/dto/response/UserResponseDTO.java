@@ -3,6 +3,8 @@ package com.lucasdevx.Mentorly.dto.response;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucasdevx.Mentorly.model.User;
 

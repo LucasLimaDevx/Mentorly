@@ -1,12 +1,17 @@
 package com.lucasdevx.Mentorly.service;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
+import com.lucasdevx.Mentorly.controller.UserController;
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
 import com.lucasdevx.Mentorly.mapper.UserMapper;
@@ -27,7 +32,7 @@ public class UserService {
 		this.userMapper = userMapper;
 	}
 	
-	public UserResponseDTO create(UserRequestDTO request) {
+	public EntityModel<UserResponseDTO> create(UserRequestDTO request) {
 		logger.info(">>> Initializing the service's create method.");
 		
 		User user = userMapper.converterToEntity(request);
@@ -45,15 +50,16 @@ public class UserService {
 		
 		logger.info(">>> Saving entity to database.");
 		User userPersisted = userRepository.save(user);
-
-		UserResponseDTO response = userMapper.converterToDto(userPersisted);
+		
+		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
+		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO);
 		
 		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
-	public UserResponseDTO findById(Long id) {
+	public EntityModel<UserResponseDTO> findById(Long id) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
 		
@@ -62,14 +68,15 @@ public class UserService {
 		
 		logger.info(">>> The entity was found.");
 		
-		UserResponseDTO response = userMapper.converterToDto(userPersisted);
-	
+		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
+		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO);
+		
 		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
-	public List<UserResponseDTO> findAll() {
+	public List<EntityModel<UserResponseDTO>> findAll() {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
@@ -77,16 +84,20 @@ public class UserService {
 		
 		logger.info(">>> The entities have been discovered.");
 		
-		List<UserResponseDTO> responsesDTO = usersPersisted.stream()
+		List<UserResponseDTO> usersDTO = usersPersisted.stream()
 				.map((response) -> userMapper.converterToDto(response))
 				.toList();
-	
+		
+		List<EntityModel<UserResponseDTO>> responsesDTO = usersDTO.stream()
+				.map((userDTO) -> addHateoasLinks(userDTO))
+				.toList();
+		
 		logger.info(">>> Returning response.");
 		
 		return responsesDTO;
 	}
 	
-	public UserResponseDTO update(UserRequestDTO request ,Long id) {
+	public EntityModel<UserResponseDTO> update(UserRequestDTO request ,Long id) {
 		logger.info(">>> Initializing the service's update method.");
 		logger.info(">>> Searching for entity in database.");
 		
@@ -95,7 +106,8 @@ public class UserService {
 		
 		User userUpdated = updateData(userPersisted, request);
 		
-		UserResponseDTO response = userMapper.converterToDto(userRepository.save(userUpdated));
+		UserResponseDTO userDTO = userMapper.converterToDto(userRepository.save(userUpdated));
+		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO);
 		
 		logger.info(">>> Returning response.");
 		
@@ -140,5 +152,21 @@ public class UserService {
 		logger.info(">>> The data has been updated.");
 		
 		return user;
+	}
+	
+	public EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO) {
+		Long id = userDTO.getId();
+		logger.info(">>> Adding links HATEOAS.");
+		EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
+				linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
+				linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
+				linkTo(methodOn(UserController.class).create(null)).withRel("create").withType("POST"),
+				linkTo(methodOn(UserController.class).update(null, id)).withRel("update").withType("PUT"),
+				linkTo(methodOn(UserController.class).delete(id)).withRel("delete").withType("DELETE"));
+		
+		logger.info(">>> The HATEOAS links have been successfully added.");
+		
+		return model;
+		
 	}
 }
