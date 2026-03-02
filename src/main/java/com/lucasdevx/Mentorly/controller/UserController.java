@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,17 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@PostMapping
+	@PostMapping(
+			consumes = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+							},
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
 	public EntityModel<UserResponseDTO> create(@RequestBody UserRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
@@ -40,7 +51,13 @@ public class UserController {
 		return response;
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping(
+			value = "/{id}",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+		})
 	public EntityModel<UserResponseDTO> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
@@ -50,7 +67,12 @@ public class UserController {
 		return response;
 	}
 	
-	@GetMapping
+	@GetMapping(
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
 	public List<EntityModel<UserResponseDTO>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
@@ -61,7 +83,18 @@ public class UserController {
 		return responsesDTO;
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(
+			value = "/{id}",
+			consumes = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+			},
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+			})
 	public EntityModel<UserResponseDTO> update(@RequestBody UserRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		

@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,17 @@ public class CategoryController {
 		this.categoryService = categoryService;
 	}
 	
-	@PostMapping
+	@PostMapping(
+			consumes = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+							},
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
 	public EntityModel<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
@@ -42,7 +53,13 @@ public class CategoryController {
 		return response;
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping(
+			value = "/{id}",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
 	public EntityModel<CategoryResponseDTO> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
@@ -53,7 +70,12 @@ public class CategoryController {
 		return response;
 	}
 	
-	@GetMapping
+	@GetMapping(
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
 	public List<EntityModel<CategoryResponseDTO>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
@@ -64,7 +86,17 @@ public class CategoryController {
 		return responsesDTO;
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(value = "/{id}",
+			consumes = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+							},
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
 	public EntityModel<CategoryResponseDTO> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
