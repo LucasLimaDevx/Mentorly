@@ -35,7 +35,7 @@ public interface CourseControllerDocs {
 			}
 			
 	)
-	public EntityModel<CourseResponseDTO> create(@RequestBody CourseRequestDTO request) ;
+	public ResponseEntity<EntityModel<CourseResponseDTO>> create(@RequestBody CourseRequestDTO request) ;
 	
 	@Operation(
 			summary = "Finds a Course.",
@@ -53,7 +53,7 @@ public interface CourseControllerDocs {
 			}
 			
 	)
-	public EntityModel<CourseResponseDTO> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<CourseResponseDTO>> findById(@PathVariable Long id);
 	
 	@Operation(
 			summary = "Find All Course.",
@@ -79,7 +79,7 @@ public interface CourseControllerDocs {
 			}
 			
 	)
-	public List<EntityModel<CourseResponseDTO>> findAll();
+	public ResponseEntity<List<EntityModel<CourseResponseDTO>> > findAll();
 	
 	@Operation(
 			summary = "Update a Course.",
@@ -97,7 +97,7 @@ public interface CourseControllerDocs {
 			}
 			
 	)
-	public EntityModel<CourseResponseDTO> update(@RequestBody CourseRequestDTO request, @PathVariable Long id);
+	public ResponseEntity<EntityModel<CourseResponseDTO>> update(@RequestBody CourseRequestDTO request, @PathVariable Long id);
 	
 	@Operation(
 			summary = "Delete a Course.",

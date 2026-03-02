@@ -33,7 +33,7 @@ public interface CertificateControllerDocs {
 			}
 			
 	)
-	public EntityModel<CertificateResponseDTO> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<CertificateResponseDTO>> findById(@PathVariable Long id);
 	
 	@Operation(
 			summary = "Find All Certificate.",
@@ -59,7 +59,7 @@ public interface CertificateControllerDocs {
 			}
 			
 	)
-	public List<EntityModel<CertificateResponseDTO>> findAll();
+	public ResponseEntity<List<EntityModel<CertificateResponseDTO>>> findAll();
 	
 	@Operation(
 			summary = "Delete a Certificate.",

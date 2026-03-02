@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,13 +47,13 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<UserResponseDTO> create(@RequestBody UserRequestDTO request) {
+	public ResponseEntity<EntityModel<UserResponseDTO> > create(@RequestBody UserRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
 		EntityModel<UserResponseDTO> response = userService.create(request);
 		
 		logger.info(">>> Finishing the controller's create method.");
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(
@@ -62,13 +63,13 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 		})
-	public EntityModel<UserResponseDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
 		EntityModel<UserResponseDTO> response = userService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(
@@ -77,14 +78,14 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public List<EntityModel<UserResponseDTO>> findAll() {
+	public ResponseEntity<List<EntityModel<UserResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
 		List<EntityModel<UserResponseDTO>> responsesDTO = userService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
-		return responsesDTO;
+		return ResponseEntity.ok(responsesDTO);
 	}
 	
 	@PutMapping(
@@ -99,14 +100,14 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 			})
-	public EntityModel<UserResponseDTO> update(@RequestBody UserRequestDTO request, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
 		EntityModel<UserResponseDTO> response = userService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@DeleteMapping("/{id}")

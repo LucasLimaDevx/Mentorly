@@ -35,7 +35,7 @@ public interface UserControllerDocs{
 			}
 			
 	)
-	public EntityModel<UserResponseDTO> create(@RequestBody UserRequestDTO request) ;
+	public ResponseEntity<EntityModel<UserResponseDTO>> create(@RequestBody UserRequestDTO request) ;
 	
 	@Operation(
 			summary = "Finds a User.",
@@ -53,7 +53,7 @@ public interface UserControllerDocs{
 			}
 			
 	)
-	public EntityModel<UserResponseDTO> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<UserResponseDTO>> findById(@PathVariable Long id);
 	
 	@Operation(
 			summary = "Find All User.",
@@ -81,7 +81,7 @@ public interface UserControllerDocs{
 			}
 			
 	)
-	public List<EntityModel<UserResponseDTO>> findAll();
+	public ResponseEntity<List<EntityModel<UserResponseDTO>>> findAll();
 	
 	@Operation(
 			summary = "Update a User.",
@@ -99,7 +99,7 @@ public interface UserControllerDocs{
 			}
 			
 	)
-	public EntityModel<UserResponseDTO> update(@RequestBody UserRequestDTO request, @PathVariable Long id);
+	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id);
 	
 	@Operation(
 			summary = "Delete a User.",

@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,14 +48,14 @@ public class CategoryController  implements CategoryControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO request) {
+	public ResponseEntity<EntityModel<CategoryResponseDTO>> create(@RequestBody CategoryRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
 		EntityModel<CategoryResponseDTO> response = categoryService.create(request);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(
@@ -64,14 +65,14 @@ public class CategoryController  implements CategoryControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<CategoryResponseDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<EntityModel<CategoryResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
 		EntityModel<CategoryResponseDTO> response = categoryService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(
@@ -80,14 +81,14 @@ public class CategoryController  implements CategoryControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public List<EntityModel<CategoryResponseDTO>> findAll() {
+	public ResponseEntity<List<EntityModel<CategoryResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
 		List<EntityModel<CategoryResponseDTO>> responsesDTO = categoryService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
-		return responsesDTO;
+		return ResponseEntity.ok(responsesDTO);
 	}
 	
 	@PutMapping(value = "/{id}",
@@ -101,14 +102,14 @@ public class CategoryController  implements CategoryControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<CategoryResponseDTO> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<CategoryResponseDTO>> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
 		EntityModel<CategoryResponseDTO> response = categoryService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@DeleteMapping("/{id}")

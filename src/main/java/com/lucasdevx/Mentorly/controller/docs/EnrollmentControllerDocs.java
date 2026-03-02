@@ -35,7 +35,7 @@ public interface EnrollmentControllerDocs {
 			}
 			
 	)
-	public EntityModel<EnrollmentResponseDTO> create(@RequestBody EnrollmentRequestDTO request) ;
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request) ;
 	
 	@Operation(
 			summary = "Finds a Enrollment.",
@@ -53,7 +53,7 @@ public interface EnrollmentControllerDocs {
 			}
 			
 	)
-	public EntityModel<EnrollmentResponseDTO> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> findById(@PathVariable Long id);
 	
 	@Operation(
 			summary = "Find All Enrollment.",
@@ -80,7 +80,7 @@ public interface EnrollmentControllerDocs {
 			}
 			
 	)
-	public List<EntityModel<EnrollmentResponseDTO>> findAll();
+	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>> > findAll();
 	
 	@Operation(
 			summary = "Update a Enrollment.",
@@ -98,7 +98,7 @@ public interface EnrollmentControllerDocs {
 			}
 			
 	)
-	public EntityModel<EnrollmentResponseDTO> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id);
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id);
 	
 	@Operation(
 			summary = "Delete a Enrollment.",

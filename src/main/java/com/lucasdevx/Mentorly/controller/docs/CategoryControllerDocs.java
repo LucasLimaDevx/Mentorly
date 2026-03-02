@@ -35,7 +35,7 @@ public interface CategoryControllerDocs {
 			}
 			
 	)
-	public EntityModel<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO request) ;
+	public ResponseEntity<EntityModel<CategoryResponseDTO>> create(@RequestBody CategoryRequestDTO request) ;
 	
 	@Operation(
 			summary = "Finds a Category.",
@@ -53,7 +53,7 @@ public interface CategoryControllerDocs {
 			}
 			
 	)
-	public EntityModel<CategoryResponseDTO> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<CategoryResponseDTO>> findById(@PathVariable Long id);
 	
 	@Operation(
 			summary = "Find All Category.",
@@ -79,7 +79,7 @@ public interface CategoryControllerDocs {
 			}
 			
 	)
-	public List<EntityModel<CategoryResponseDTO>> findAll();
+	public ResponseEntity<List<EntityModel<CategoryResponseDTO>>> findAll();
 	
 	@Operation(
 			summary = "Update a Category.",
@@ -97,7 +97,7 @@ public interface CategoryControllerDocs {
 			}
 			
 	)
-	public EntityModel<CategoryResponseDTO> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id);
+	public ResponseEntity<EntityModel<CategoryResponseDTO>> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id);
 	
 	@Operation(
 			summary = "Delete a Category.",

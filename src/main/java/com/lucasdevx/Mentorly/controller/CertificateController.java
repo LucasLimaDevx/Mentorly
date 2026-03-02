@@ -40,14 +40,14 @@ public class CertificateController  implements CertificateControllerDocs  {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<CertificateResponseDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<EntityModel<CertificateResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
 		EntityModel<CertificateResponseDTO> response = certificateService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(
@@ -56,14 +56,14 @@ public class CertificateController  implements CertificateControllerDocs  {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public List<EntityModel<CertificateResponseDTO>> findAll() {
+	public ResponseEntity<List<EntityModel<CertificateResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
 		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificateService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
-		return responsesDTO;
+		return ResponseEntity.ok(responsesDTO);
 	}
 	
 	

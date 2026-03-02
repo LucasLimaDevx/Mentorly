@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,14 +49,14 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 				}
 			)
-	public EntityModel<EnrollmentResponseDTO> create(@RequestBody EnrollmentRequestDTO request) {
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
 		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
-		return response;
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
 	@GetMapping(
@@ -65,14 +66,14 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<EnrollmentResponseDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
 		EntityModel<EnrollmentResponseDTO> response = enrollmentService.findById(id);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(
@@ -82,14 +83,14 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 				}
 			)
-	public List<EntityModel<EnrollmentResponseDTO>> findAll() {
+	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
 		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll();
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
-		return responsesDTO;
+		return ResponseEntity.ok(responsesDTO);
 	}
 	
 	@PutMapping(
@@ -104,14 +105,14 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<EnrollmentResponseDTO> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
 		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@DeleteMapping("/{id}")

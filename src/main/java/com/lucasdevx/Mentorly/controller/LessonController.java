@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,13 +48,13 @@ public class LessonController  implements LessonControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<LessonResponseDTO> create(@RequestBody LessonRequestDTO request) {
+	public ResponseEntity<EntityModel<LessonResponseDTO>> create(@RequestBody LessonRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
 		EntityModel<LessonResponseDTO> response = lessonService.create(request);
 		
 		logger.info(">>> Finishing the controller's create method.");
-		return response;
+		return new ResponseEntity<>(response,HttpStatus.CREATED);
 	}
 	
 	@GetMapping(
@@ -63,14 +64,14 @@ public class LessonController  implements LessonControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public EntityModel<LessonResponseDTO> findById(@PathVariable Long id) {
+	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
 		EntityModel<LessonResponseDTO> response = lessonService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping(
@@ -79,14 +80,14 @@ public class LessonController  implements LessonControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public List<EntityModel<LessonResponseDTO>> findAll() {
+	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
 		List<EntityModel<LessonResponseDTO>> responsesDTO = lessonService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
-		return responsesDTO;
+		return ResponseEntity.ok(responsesDTO);
 	}
 	
 	@PutMapping(
@@ -102,14 +103,14 @@ public class LessonController  implements LessonControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 						}
 			)
-	public EntityModel<LessonResponseDTO> update(@RequestBody LessonRequestDTO request, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<LessonResponseDTO>> update(@RequestBody LessonRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
 		EntityModel<LessonResponseDTO> response = lessonService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
 		
-		return response;
+		return ResponseEntity.ok(response);
 	}
 	
 	@DeleteMapping("/{id}")

@@ -35,7 +35,7 @@ public interface LessonControllerDocs {
 			}
 			
 	)
-	public EntityModel<LessonResponseDTO> create(@RequestBody LessonRequestDTO request) ;
+	public ResponseEntity<EntityModel<LessonResponseDTO>> create(@RequestBody LessonRequestDTO request) ;
 	
 	@Operation(
 			summary = "Finds a Lesson.",
@@ -53,7 +53,7 @@ public interface LessonControllerDocs {
 			}
 			
 	)
-	public EntityModel<LessonResponseDTO> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id);
 	
 	@Operation(
 			summary = "Find All Lesson.",
@@ -80,7 +80,7 @@ public interface LessonControllerDocs {
 			}
 			
 	)
-	public List<EntityModel<LessonResponseDTO>> findAll();
+	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll();
 	
 	@Operation(
 			summary = "Update a Lesson.",
@@ -98,7 +98,7 @@ public interface LessonControllerDocs {
 			}
 			
 	)
-	public EntityModel<LessonResponseDTO> update(@RequestBody LessonRequestDTO request, @PathVariable Long id);
+	public ResponseEntity<EntityModel<LessonResponseDTO>> update(@RequestBody LessonRequestDTO request, @PathVariable Long id);
 	
 	@Operation(
 			summary = "Delete a Lesson.",
