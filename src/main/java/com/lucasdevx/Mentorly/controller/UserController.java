@@ -16,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.controller.docs.UserControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
 import com.lucasdevx.Mentorly.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/users/v1")
-public class UserController {
+@Tag(name = "User", description = "Endpoints for managing User.")
+public class UserController implements UserControllerDocs {
 	
 	private UserService userService;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);

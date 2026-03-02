@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.controller.docs.CertificateControllerDocs;
 import com.lucasdevx.Mentorly.dto.response.CertificateResponseDTO;
 import com.lucasdevx.Mentorly.service.CertificateService;
 import com.lucasdevx.Mentorly.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/certificates/v1")
-public class CertificateController {
+@Tag(name = "Certificate", description = "Endpoints for managing Certificate.")
+public class CertificateController  implements CertificateControllerDocs  {
 	
 	private CertificateService certificateService;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);

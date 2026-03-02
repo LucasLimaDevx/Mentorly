@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.controller.docs.CategoryControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.CategoryRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CategoryResponseDTO;
 import com.lucasdevx.Mentorly.service.CategoryService;
 import com.lucasdevx.Mentorly.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/categories/v1")
-public class CategoryController {
+@Tag(name = "Category", description = "Endpoints for managing Category.")
+public class CategoryController  implements CategoryControllerDocs {
 	
 	private CategoryService categoryService;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);

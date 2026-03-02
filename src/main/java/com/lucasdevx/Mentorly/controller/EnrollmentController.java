@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.controller.docs.EnrollmentControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
 import com.lucasdevx.Mentorly.service.EnrollmentService;
 import com.lucasdevx.Mentorly.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/enrollments/v1")
-public class EnrollmentController {
+@Tag(name = "Enrollment", description = "Endpoints for managing Enrollment.")
+public class EnrollmentController  implements EnrollmentControllerDocs {
 	
 	private EnrollmentService enrollmentService;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
