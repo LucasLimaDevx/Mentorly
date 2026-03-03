@@ -66,6 +66,10 @@ public class UserController implements UserControllerDocs {
 	public ResponseEntity<EntityModel<UserResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<UserResponseDTO> response = userService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
@@ -102,7 +106,9 @@ public class UserController implements UserControllerDocs {
 			})
 	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
-		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		EntityModel<UserResponseDTO> response = userService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
@@ -114,6 +120,9 @@ public class UserController implements UserControllerDocs {
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's delete method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		userService.delete(id);
 		
 		logger.info(">>> Finishing the controller's delete method.");

@@ -25,6 +25,6 @@ public class GlobalHandlerException {
 	public ResponseEntity<ExceptionResponseDTO> hanldeAllException(Exception exception, WebRequest request) {
 		ExceptionResponseDTO response = new ExceptionResponseDTO(new Date(), exception.getMessage(), request.getDescription(false));
 	
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 }

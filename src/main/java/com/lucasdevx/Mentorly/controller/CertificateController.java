@@ -43,6 +43,10 @@ public class CertificateController  implements CertificateControllerDocs  {
 	public ResponseEntity<EntityModel<CertificateResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<CertificateResponseDTO> response = certificateService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
@@ -70,6 +74,10 @@ public class CertificateController  implements CertificateControllerDocs  {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's delete method.");
+		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		
 		certificateService.delete(id);
 		

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.lucasdevx.Mentorly.controller.EnrollmentController;
 import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
+import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.EnrollmentMapper;
 import com.lucasdevx.Mentorly.model.Enrollment;
 import com.lucasdevx.Mentorly.repository.EnrollmentRepository;
@@ -58,7 +59,7 @@ public class EnrollmentService {
 		
 		
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Enrollment Not Found"));
 		
 		
 		logger.info(">>> The entity was found.");
@@ -98,7 +99,7 @@ public class EnrollmentService {
 		
 		
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id).orElseThrow(
-				()-> new IllegalArgumentException("Invalid ID"));
+				()-> new ObjectNotFoundException("Object Enrollment Not Found."));
 		
 		Enrollment enrollmentUpdated = updateDate(enrollmentPersisted, request);
 		
@@ -113,7 +114,7 @@ public class EnrollmentService {
 	public void delete(Long id) {
 		logger.info(">>> Initializing the service's delete method.");
 		/*Enrollment enrollmentPersisted = enrollmentRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Enrollment Not Found"));
 		*/
 		
 		logger.info(">>> Deleting Entity by ID");

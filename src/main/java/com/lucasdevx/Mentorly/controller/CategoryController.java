@@ -68,6 +68,10 @@ public class CategoryController  implements CategoryControllerDocs {
 	public ResponseEntity<EntityModel<CategoryResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<CategoryResponseDTO> response = categoryService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
@@ -105,6 +109,10 @@ public class CategoryController  implements CategoryControllerDocs {
 	public ResponseEntity<EntityModel<CategoryResponseDTO>> update(@RequestBody CategoryRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<CategoryResponseDTO> response = categoryService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
@@ -115,6 +123,10 @@ public class CategoryController  implements CategoryControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's delete method.");
+		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		
 		categoryService.delete(id);
 		

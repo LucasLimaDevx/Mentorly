@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.lucasdevx.Mentorly.controller.CourseController;
 import com.lucasdevx.Mentorly.dto.request.CourseRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
+import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.CourseMapper;
 import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.repository.CourseRepository;
@@ -60,7 +61,7 @@ public class CourseService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Course coursePersisted = courseRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
 		
 		logger.info(">>> The entity was found.");
 		
@@ -98,7 +99,7 @@ public class CourseService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Course coursePersisted = courseRepository.findById(id).orElseThrow(
-				()-> new IllegalArgumentException("Invalid ID"));
+				()-> new ObjectNotFoundException("Object Course not found."));
 		
 		Course courseUpdated = updateData(coursePersisted, request);
 		
@@ -113,7 +114,7 @@ public class CourseService {
 	public void delete(Long id) {
 		logger.info(">>> Initializing the service's delete method.");
 		/*Course coursePersisted = courseRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
 		*/
 		
 		logger.info(">>> The data has been updated.");

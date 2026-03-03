@@ -67,6 +67,10 @@ public class LessonController  implements LessonControllerDocs {
 	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<LessonResponseDTO> response = lessonService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
@@ -106,6 +110,10 @@ public class LessonController  implements LessonControllerDocs {
 	public ResponseEntity<EntityModel<LessonResponseDTO>> update(@RequestBody LessonRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<LessonResponseDTO> response = lessonService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's update method.");
@@ -116,6 +124,10 @@ public class LessonController  implements LessonControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's delete method.");
+		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		
 		lessonService.delete(id);
 		

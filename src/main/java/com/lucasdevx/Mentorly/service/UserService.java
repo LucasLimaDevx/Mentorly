@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.lucasdevx.Mentorly.controller.UserController;
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
+import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.UserMapper;
 import com.lucasdevx.Mentorly.model.User;
 import com.lucasdevx.Mentorly.repository.UserRepository;
@@ -64,7 +65,7 @@ public class UserService {
 		logger.info(">>> Searching for entity in database.");
 		
 		User userPersisted = userRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object User not found."));
 		
 		logger.info(">>> The entity was found.");
 		
@@ -102,7 +103,7 @@ public class UserService {
 		logger.info(">>> Searching for entity in database.");
 		
 		User userPersisted = userRepository.findById(id).orElseThrow(
-				()-> new IllegalArgumentException("Invalid ID"));
+				()-> new ObjectNotFoundException("Object User not found."));
 		
 		User userUpdated = updateData(userPersisted, request);
 		
@@ -116,9 +117,10 @@ public class UserService {
 	
 	public void delete(Long id) {
 		logger.info(">>> Initializing the service's delete method.");
-		/*User userPersisted = userRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
-		*/
+		/*
+		User userPersisted = userRepository.findById(id)
+				.orElseThrow(()-> new ObjectNotFoundException("Object USER not found."));*/
+	
 		
 		logger.info(">>> Deleting Entity by ID");
 		userRepository.deleteById(id);

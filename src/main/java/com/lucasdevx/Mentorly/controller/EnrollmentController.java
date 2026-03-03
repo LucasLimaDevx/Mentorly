@@ -69,6 +69,10 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<EnrollmentResponseDTO> response = enrollmentService.findById(id);
 		
 		logger.info(">>> Finishing the controller's create method.");
@@ -108,6 +112,10 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's create method.");
@@ -118,6 +126,10 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's delete method.");
+		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		
 		enrollmentService.delete(id);
 		

@@ -69,6 +69,10 @@ public class CourseController  implements CourseControllerDocs  {
 	public ResponseEntity<EntityModel<CourseResponseDTO>> findById(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<CourseResponseDTO> response = courseService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
@@ -105,6 +109,10 @@ public class CourseController  implements CourseControllerDocs  {
 	public ResponseEntity<EntityModel<CourseResponseDTO>> update(@RequestBody CourseRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
 		EntityModel<CourseResponseDTO> response = courseService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
@@ -115,6 +123,10 @@ public class CourseController  implements CourseControllerDocs  {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's findById method.");
+		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
 		
 		courseService.delete(id);
 		

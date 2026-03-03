@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.lucasdevx.Mentorly.controller.LessonController;
 import com.lucasdevx.Mentorly.dto.request.LessonRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
+import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.LessonMapper;
 import com.lucasdevx.Mentorly.model.Lesson;
 import com.lucasdevx.Mentorly.repository.LessonRepository;
@@ -53,7 +54,7 @@ public class LessonService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Lesson lessonPersisted = lessonRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Lesson not found."));
 		
 		logger.info(">>> The entity was found.");
 		
@@ -89,7 +90,7 @@ public class LessonService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Lesson lessonPersisted = lessonRepository.findById(id).orElseThrow(
-				()-> new IllegalArgumentException("Invalid ID"));
+				()-> new ObjectNotFoundException("Object Lesson not found."));
 		
 		Lesson lessonUpdated = updateData(lessonPersisted, request);
 	
@@ -104,7 +105,7 @@ public class LessonService {
 	public void delete(Long id) {
 		logger.info(">>> Initializing the service's delete method.");
 		/*Lesson lessonPersisted = lessonRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Lesson not found."));
 		*/
 		
 		logger.info(">>> Deleting Entity by ID");

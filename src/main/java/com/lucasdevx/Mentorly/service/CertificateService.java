@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.lucasdevx.Mentorly.controller.CertificateController;
 import com.lucasdevx.Mentorly.dto.response.CertificateResponseDTO;
+import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.CertificateMapper;
 import com.lucasdevx.Mentorly.model.Certificate;
 import com.lucasdevx.Mentorly.repository.CertificateRepository;
@@ -51,7 +52,7 @@ public class CertificateService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Certificate certificatePersisted = certificateRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Certificate not found."));
 		
 		logger.info(">>> The entity was found.");
 		
@@ -86,7 +87,7 @@ public class CertificateService {
 	/*
 	public CertificateResponseDTO update(CertificateRequestDTO request ,Long id) {
 		Certificate certificatePersisted = certificateRepository.findById(id).orElseThrow(
-				()-> new IllegalArgumentException("Invalid ID"));
+				()-> new ObjectNotFoundException("Object Certificate not found."));
 		
 		if(request.getActive() != null) { 
 			certificatePersisted.setActive(request.getActive());
@@ -104,7 +105,7 @@ public class CertificateService {
 		logger.info(">>> Initializing the service's delete method.");
 		
 		/*Certificate certificatePersisted = certificateRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Certificate not found."));
 		*/
 		
 		logger.info(">>> Deleting Entity by ID");

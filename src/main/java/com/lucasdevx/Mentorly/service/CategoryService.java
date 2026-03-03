@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.lucasdevx.Mentorly.controller.CategoryController;
 import com.lucasdevx.Mentorly.dto.request.CategoryRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CategoryResponseDTO;
+import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.CategoryMapper;
 import com.lucasdevx.Mentorly.model.Category;
 import com.lucasdevx.Mentorly.repository.CategoryRepository;
@@ -53,7 +54,7 @@ public class CategoryService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Category categoryPersisted = categoryRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Category not found."));
 		
 		logger.info(">>> The entity was found.");
 		
@@ -92,7 +93,7 @@ public class CategoryService {
 		logger.info(">>> Searching for entity in database.");
 		
 		Category categoryPersisted = categoryRepository.findById(id).orElseThrow(
-				()-> new IllegalArgumentException("Invalid ID"));
+				()-> new ObjectNotFoundException("Object Category not found."));
 		
 		Category categoryUpdated = updateData(categoryPersisted, request);
 		
@@ -107,7 +108,7 @@ public class CategoryService {
 	public void delete(Long id) {
 		logger.info(">>> Initializing the service's delete method.");
 		/*Category categoryPersisted = categoryRepository.findById(id)
-				.orElseThrow(()-> new IllegalArgumentException("Invalid ID"));
+				.orElseThrow(()-> new ObjectNotFoundException("Object Category not found."));
 		*/
 		
 		logger.info(">>> Deleting Entity by ID");
