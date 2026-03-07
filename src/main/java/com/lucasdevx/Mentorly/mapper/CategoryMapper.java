@@ -19,10 +19,10 @@ public class CategoryMapper {
 		Category category = new Category();
 		
 		logger.debug(">>> Setting title.");
-		category.setTitle(request.getTitle());
+		category.setTitle(request.title());
 		
 		logger.debug(">>> Setting description.");
-		category.setDescription(request.getDescription());
+		category.setDescription(request.description());
 		
 		logger.info(">>> The DTO conversion was successful.");
 		

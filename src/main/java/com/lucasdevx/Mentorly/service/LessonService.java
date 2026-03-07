@@ -116,16 +116,16 @@ public class LessonService {
 		logger.info(">>> Updating the data.");
 		
 		logger.debug(">>> Updating title.");
-		lesson.setTitle(request.getTitle());
+		lesson.setTitle(request.title());
 		
 		logger.debug(">>> Updating description.");
-		lesson.setDescription(request.getDescription());
+		lesson.setDescription(request.description());
 		
 		logger.debug(">>> Updating videoUrl.");
-		lesson.setVideoUrl(request.getVideoUrl());
+		lesson.setVideoUrl(request.videoUrl());
 		
 		logger.debug(">>> Updating lessonOrder.");
-		lesson.setLessonOrder(request.getLessonOrder());
+		lesson.setLessonOrder(request.lessonOrder());
 		
 		logger.info(">>> The data has been updated.");
 		

@@ -124,7 +124,7 @@ public class EnrollmentService {
 	public Enrollment updateDate(Enrollment enrollment, EnrollmentRequestDTO request) {
 		logger.info(">>> Updating the data.");
 		
-		enrollment.setProgressPercentage(request.getProgressPercentage());
+		enrollment.setProgressPercentage(request.progressPercentage());
 		
 		logger.info(">>> The data has been updated.");
 		

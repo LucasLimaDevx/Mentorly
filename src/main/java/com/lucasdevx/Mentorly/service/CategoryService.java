@@ -119,10 +119,10 @@ public class CategoryService {
 		logger.info(">>> Updating the data.");
 		
 		logger.debug(">>> Updating title.");
-		category.setTitle(request.getTitle());
+		category.setTitle(request.title());
 		
 		logger.debug(">>> Updating description.");
-		category.setDescription(request.getDescription());
+		category.setDescription(request.description());
 		
 		logger.info(">>> The data has been updated.");
 		

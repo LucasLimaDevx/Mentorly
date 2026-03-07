@@ -18,16 +18,16 @@ public class LessonMapper {
 		Lesson lesson = new Lesson();
 		
 		logger.debug(">>> Setting title.");
-		lesson.setTitle(request.getTitle());
+		lesson.setTitle(request.title());
 		
 		logger.debug(">>> Setting description.");
-		lesson.setDescription(request.getDescription());
+		lesson.setDescription(request.description());
 		
 		logger.debug(">>> Setting videoUrl.");
-		lesson.setVideoUrl(request.getVideoUrl());
+		lesson.setVideoUrl(request.videoUrl());
 		
 		logger.debug(">>> Setting lessonOrder.");
-		lesson.setLessonOrder(request.getLessonOrder());
+		lesson.setLessonOrder(request.lessonOrder());
 		
 		logger.info(">>> The DTO conversion was successful.");
 		return lesson;

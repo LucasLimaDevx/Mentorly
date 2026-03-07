@@ -19,16 +19,16 @@ public class UserMapper {
 		User user = new User();
 		
 		logger.debug(">>> Setting firstName.");
-		user.setFirstName(request.getFirstName());
+		user.setFirstName(request.firstName());
 		
 		logger.debug(">>> Setting lastName.");
-		user.setLastName(request.getLastName());
+		user.setLastName(request.lastName());
 		
 		logger.debug(">>> Setting email.");
-		user.setEmail(request.getEmail());
+		user.setEmail(request.email());
 		
 		logger.debug(">>> Setting password.");
-		user.setPassword(request.getPassword());
+		user.setPassword(request.password());
 		
 		logger.info(">>> The DTO conversion was successful.");
 		return user;

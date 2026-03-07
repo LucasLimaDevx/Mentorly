@@ -130,25 +130,25 @@ public class UserService {
 		logger.info(">>> Updating the data.");
 		
 		logger.debug(">>> Updating first name.");
-		user.setFirstName(request.getFirstName());
+		user.setFirstName(request.firstName());
 		
 		logger.debug(">>> Updating last name.");
-		user.setLastName(request.getLastName());
+		user.setLastName(request.lastName());
 		
 		logger.debug(">>> Updating email.");
-		user.setEmail(request.getEmail());
+		user.setEmail(request.email());
 		
 		logger.debug(">>> Updating password.");
-		user.setPassword(request.getPassword());
+		user.setPassword(request.password());
 		
 		logger.debug(">>> Updating date.");
 		user.setUpdatedAt(new Date());
 		
 		logger.debug(">>> Checking if the active property is null.");
-		if(request.getActive() != null) { 
+		if(request.active() != null) { 
 			
 			logger.debug(">>> Updating active.");
-			user.setActive(request.getActive());
+			user.setActive(request.active());
 		}
 		
 		logger.info(">>> The data has been updated.");

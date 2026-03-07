@@ -18,10 +18,10 @@ public class CourseMapper {
 		Course course = new Course();
 		
 		logger.debug(">>> Setting title.");
-		course.setTitle(request.getTitle());
+		course.setTitle(request.title());
 		
 		logger.debug(">>> Setting workloadHours.");
-		course.setWorkloadHours(request.getWorkloadHours());
+		course.setWorkloadHours(request.workloadHours());
 	
 		logger.info(">>> The DTO conversion was successful.");
 		

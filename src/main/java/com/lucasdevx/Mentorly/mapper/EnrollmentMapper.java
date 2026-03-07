@@ -18,7 +18,7 @@ public class EnrollmentMapper {
 		Enrollment enrollment = new Enrollment();
 		
 		logger.debug(">>> Setting progressPercentage.");
-		enrollment.setProgressPercentage(request.getProgressPercentage());
+		enrollment.setProgressPercentage(request.progressPercentage());
 		
 		logger.info(">>> The DTO conversion was successful.");
 		

@@ -125,14 +125,14 @@ public class CourseService {
 		logger.info(">>> Updating the data.");
 		
 		logger.debug(">>> Setting title.");
-		course.setTitle(request.getTitle());
+		course.setTitle(request.title());
 		
 		logger.debug(">>> Setting workloadHours.");
-		course.setWorkloadHours(request.getWorkloadHours());
+		course.setWorkloadHours(request.workloadHours());
 		
 		logger.debug(">>> Checking if the active property is null.");
-		if(request.getActive() != null) {
-			course.setActive(request.getActive());
+		if(request.active() != null) {
+			course.setActive(request.active());
 		}
 		
 		logger.info(">>> The data has been updated.");
