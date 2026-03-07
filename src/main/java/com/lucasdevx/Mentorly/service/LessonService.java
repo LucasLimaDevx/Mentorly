@@ -133,7 +133,7 @@ public class LessonService {
 	}
 	
 	public EntityModel<LessonResponseDTO> addHateoasLinks(LessonResponseDTO lessonDTO) {
-		Long id = lessonDTO.getId();
+		Long id = lessonDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
 				linkTo(methodOn(LessonController.class).findById(id)).withSelfRel().withType("GET"),

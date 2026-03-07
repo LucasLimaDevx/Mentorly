@@ -31,7 +31,12 @@ public class CourseMapper {
 	public CourseResponseDTO converterToDto(Course course) {
 		logger.info(">>> Converting Entity to DTO.");
 		
-		CourseResponseDTO response = new CourseResponseDTO(course);
+		CourseResponseDTO response = new CourseResponseDTO(
+									 course.getId(),
+									 course.getTitle(),
+									 course.getCreated(),
+									 course.getWorkloadHours(),
+									 course.isActive());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		return response;

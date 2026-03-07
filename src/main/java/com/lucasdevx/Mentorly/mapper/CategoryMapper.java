@@ -32,7 +32,10 @@ public class CategoryMapper {
 	public CategoryResponseDTO converterToDto(Category category) {
 		logger.info(">>> Converting Entity to DTO.");
 		
-		CategoryResponseDTO response = new CategoryResponseDTO(category);
+		CategoryResponseDTO response = new CategoryResponseDTO(
+									   category.getId(),
+									   category.getTitle(),
+									   category.getDescription());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		

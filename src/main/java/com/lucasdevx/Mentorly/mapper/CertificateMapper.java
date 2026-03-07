@@ -15,7 +15,10 @@ public class CertificateMapper {
 	public CertificateResponseDTO converterToDto(Certificate certificate) {
 		logger.info(">>> Converting Entity to DTO.");
 		
-		CertificateResponseDTO response = new CertificateResponseDTO(certificate);
+		CertificateResponseDTO response = new CertificateResponseDTO(
+										  certificate.getId(),
+										  certificate.getIssueDate(),
+										  certificate.getValidateCode());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		

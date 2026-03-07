@@ -37,7 +37,15 @@ public class UserMapper {
 	public UserResponseDTO converterToDto(User user) {
 		logger.info(">>> Converting Entity to DTO.");
 		
-		UserResponseDTO response = new UserResponseDTO(user);
+		UserResponseDTO response = new UserResponseDTO(
+												user.getId(),
+												user.getFirstName(),
+												user.getLastName(),
+												user.getEmail(),
+												user.getPassword(),
+												user.isActive(),
+												user.getCreatedAt(),
+												user.getUpdatedAt());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		

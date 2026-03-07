@@ -113,7 +113,7 @@ public class CertificateService {
 	}
 	
 	public EntityModel<CertificateResponseDTO> addHateoasLinks(CertificateResponseDTO certificateDTO) {
-		Long id = certificateDTO.getId();
+		Long id = certificateDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		EntityModel<CertificateResponseDTO> model =  EntityModel.of(certificateDTO,
 				linkTo(methodOn(CertificateController.class).findById(id)).withSelfRel().withType("GET"),

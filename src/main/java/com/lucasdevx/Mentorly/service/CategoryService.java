@@ -130,7 +130,7 @@ public class CategoryService {
 	}
 	
 	public EntityModel<CategoryResponseDTO> addHateoasLinks(CategoryResponseDTO categoryDTO) {
-		Long id = categoryDTO.getId();
+		Long id = categoryDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		EntityModel<CategoryResponseDTO> model =  EntityModel.of(categoryDTO,
 				linkTo(methodOn(CategoryController.class).findById(id)).withSelfRel().withType("GET"),

@@ -28,7 +28,10 @@ public class EnrollmentMapper {
 	public EnrollmentResponseDTO converterToDto(Enrollment enrollment) {
 		logger.info(">>> Converting Entity to DTO.");
 		
-		EnrollmentResponseDTO response = new EnrollmentResponseDTO(enrollment);
+		EnrollmentResponseDTO response = new EnrollmentResponseDTO(
+										 enrollment.getId(),
+										 enrollment.getEnrollmentDate(),
+										 enrollment.getProgressPercentage());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		

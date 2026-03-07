@@ -132,7 +132,7 @@ public class EnrollmentService {
 	}
 	
 	public EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO) {
-		Long id = enrollmentDTO.getId();
+		Long id = enrollmentDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
 				linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),

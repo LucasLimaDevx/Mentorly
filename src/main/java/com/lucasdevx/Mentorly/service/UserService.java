@@ -157,7 +157,7 @@ public class UserService {
 	}
 	
 	public EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO) {
-		Long id = userDTO.getId();
+		Long id = userDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
 				linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),

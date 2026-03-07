@@ -36,7 +36,12 @@ public class LessonMapper {
 	public LessonResponseDTO converterToDto(Lesson lesson) {
 		logger.info(">>> Converting Entity to DTO.");
 		
-		LessonResponseDTO response = new LessonResponseDTO(lesson);
+		LessonResponseDTO response = new LessonResponseDTO(
+									 lesson.getId(),
+									 lesson.getTitle(),
+									 lesson.getDescription(),
+									 lesson.getVideoUrl(),
+									 lesson.getLessonOrder());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		

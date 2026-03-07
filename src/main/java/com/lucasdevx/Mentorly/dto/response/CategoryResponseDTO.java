@@ -1,25 +1,6 @@
 package com.lucasdevx.Mentorly.dto.response;
 
-import java.io.Serializable;
-
-import com.lucasdevx.Mentorly.model.Category;
-
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
-public class CategoryResponseDTO implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
-	
-	private Long id;
-	private String title;
-	private String description;
-	
-	public CategoryResponseDTO(Category category) {
-		this.id = category.getId();
-		this.title = category.getTitle();
-		this.description = category.getDescription();
-	}
-}
+public record CategoryResponseDTO(
+	Long id,
+	String title,
+	String description) {}
