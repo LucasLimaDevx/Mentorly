@@ -4,4 +4,5 @@ public record LessonRequestDTO (
 	String title,
 	String description,
 	String videoUrl,
-	int lessonOrder) {}
+	int lessonOrder,
+	Long courseId) {}

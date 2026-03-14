@@ -15,25 +15,36 @@ import com.lucasdevx.Mentorly.dto.request.LessonRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.LessonMapper;
+import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.model.Lesson;
+import com.lucasdevx.Mentorly.repository.CourseRepository;
 import com.lucasdevx.Mentorly.repository.LessonRepository;
 
 @Service
 public class LessonService {
 
 	private LessonRepository lessonRepository;
+	private CourseRepository courseRepository;
 	private LessonMapper lessonMapper;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public LessonService(LessonRepository lessonRepository, LessonMapper lessonMapper) {
+	public LessonService(LessonRepository lessonRepository, LessonMapper lessonMapper, CourseRepository courseRepository) {
 		this.lessonRepository = lessonRepository;
 		this.lessonMapper = lessonMapper;
+		this.courseRepository = courseRepository;
 	}
 	
 	public EntityModel<LessonResponseDTO> create(LessonRequestDTO request) {
 		logger.info(">>> Initializing the service's create method.");
 		
 		Lesson lesson = lessonMapper.converterToEntity(request);
+		
+		logger.info(">>> Searching for Course entity in database.");
+		Course coursePersisted = courseRepository.findById(request.courseId())
+				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
+		
+		logger.debug(">>> Setting Course entity on lesson");
+		lesson.setCourse(coursePersisted);
 		
 		logger.info(">>> Saving entity to database.");
 		
@@ -126,6 +137,15 @@ public class LessonService {
 		
 		logger.debug(">>> Updating lessonOrder.");
 		lesson.setLessonOrder(request.lessonOrder());
+		
+		if(!lesson.getCourse().getId().equals(request.courseId())) {
+			logger.info(">>> Searching for Course entity in database.");
+			Course coursePersisted = courseRepository.findById(request.courseId())
+					.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
+			
+			logger.debug(">>> Updating Course entity on lesson");
+			lesson.setCourse(coursePersisted);
+		}
 		
 		logger.info(">>> The data has been updated.");
 		
