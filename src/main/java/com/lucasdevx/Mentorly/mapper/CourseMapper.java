@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.lucasdevx.Mentorly.dto.request.CourseRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
 import com.lucasdevx.Mentorly.model.Course;
+import com.lucasdevx.Mentorly.model.enums.Level;
 import com.lucasdevx.Mentorly.service.UserService;
 
 @Component
@@ -22,7 +23,10 @@ public class CourseMapper {
 		
 		logger.debug(">>> Setting workloadHours.");
 		course.setWorkloadHours(request.workloadHours());
-	
+		
+		logger.debug(">>> Setting courseLevel");
+		course.setLevel(Level.valueOf(request.courseLevel()));
+		
 		logger.info(">>> The DTO conversion was successful.");
 		
 		return course;
@@ -36,7 +40,8 @@ public class CourseMapper {
 									 course.getTitle(),
 									 course.getCreated(),
 									 course.getWorkloadHours(),
-									 course.isActive());
+									 course.isActive(),
+									 course.getLevel().name());
 		
 		logger.info(">>> The Entity conversion was successful.");
 		return response;

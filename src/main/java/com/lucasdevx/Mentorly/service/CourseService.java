@@ -17,6 +17,7 @@ import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.CourseMapper;
 import com.lucasdevx.Mentorly.model.Course;
+import com.lucasdevx.Mentorly.model.enums.Level;
 import com.lucasdevx.Mentorly.repository.CourseRepository;
 
 @Service
@@ -130,8 +131,12 @@ public class CourseService {
 		logger.debug(">>> Setting workloadHours.");
 		course.setWorkloadHours(request.workloadHours());
 		
+		logger.debug(">>> Setting course level.");
+		course.setLevel(Level.valueOf(request.courseLevel()));
+		
 		logger.debug(">>> Checking if the active property is null.");
 		if(request.active() != null) {
+			logger.debug(">>> Setting active.");
 			course.setActive(request.active());
 		}
 		

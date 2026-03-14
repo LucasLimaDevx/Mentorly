@@ -10,4 +10,5 @@ public record CourseResponseDTO (
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	Date created,
 	int workloadHours,
-	Boolean active) {}
+	Boolean active,
+	String courseLevel) {}

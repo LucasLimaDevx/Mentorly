@@ -7,4 +7,5 @@ public record CourseRequestDTO(
 	String title,
 	int workloadHours,
 	@JsonInclude(content = Include.NON_NULL)
-	Boolean active){}
+	Boolean active,
+	String courseLevel){}

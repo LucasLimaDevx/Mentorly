@@ -2,8 +2,12 @@ package com.lucasdevx.Mentorly.model;
 
 import java.util.Date;
 
+import com.lucasdevx.Mentorly.model.enums.Level;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,4 +40,8 @@ public class Course {
 	
 	@Column(nullable = false)
 	private Date created;
+	
+	@Column(name = "course_level", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Level level;
 }
