@@ -11,4 +11,5 @@ public record CourseResponseDTO (
 	Date created,
 	int workloadHours,
 	Boolean active,
-	String courseLevel) {}
+	String courseLevel,
+	CategoryResponseDTO category) {}

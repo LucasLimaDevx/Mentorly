@@ -13,6 +13,11 @@ import com.lucasdevx.Mentorly.service.UserService;
 @Component
 public class CourseMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	private CategoryMapper categoryMapper;
+	
+	public CourseMapper(CategoryMapper categoryMapper) {
+		this.categoryMapper = categoryMapper;
+	}
 	
 	public Course converterToEntity(CourseRequestDTO request) {
 		logger.info(">>> Converting DTO to Entity.");
@@ -34,14 +39,15 @@ public class CourseMapper {
 	
 	public CourseResponseDTO converterToDto(Course course) {
 		logger.info(">>> Converting Entity to DTO.");
-		
+
 		CourseResponseDTO response = new CourseResponseDTO(
 									 course.getId(),
 									 course.getTitle(),
 									 course.getCreated(),
 									 course.getWorkloadHours(),
 									 course.isActive(),
-									 course.getLevel().name());
+									 course.getLevel().name(),
+									 categoryMapper.converterToDto(course.getCategory()));
 		
 		logger.info(">>> The Entity conversion was successful.");
 		return response;

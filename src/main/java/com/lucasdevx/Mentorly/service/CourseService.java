@@ -16,19 +16,23 @@ import com.lucasdevx.Mentorly.dto.request.CourseRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.CourseMapper;
+import com.lucasdevx.Mentorly.model.Category;
 import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.model.enums.Level;
+import com.lucasdevx.Mentorly.repository.CategoryRepository;
 import com.lucasdevx.Mentorly.repository.CourseRepository;
 
 @Service
 public class CourseService {
 
 	private CourseRepository courseRepository;
+	private CategoryRepository categoryRepository;
 	private CourseMapper courseMapper;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public CourseService(CourseRepository courseRepository, CourseMapper courseMapper) {
+	public CourseService(CourseRepository courseRepository, CategoryRepository categoryRepository, CourseMapper courseMapper) {
 		this.courseRepository = courseRepository;
+		this.categoryRepository = categoryRepository;
 		this.courseMapper = courseMapper;
 	}
 	
@@ -43,8 +47,15 @@ public class CourseService {
 		logger.debug(">>> Setting active.");
 		course.setActive(true);
 		
-		logger.info(">>> Saving entity to database.");
+		logger.info(">>> Searching for Category entity in database.");
+		Category categoryPersisted = categoryRepository.findById(request.categoryId())
+				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
 		
+		
+		logger.debug(">>> Setting category.");
+		course.setCategory(categoryPersisted);
+		
+		logger.info(">>> Saving entity to database.");
 		Course coursePersisted = courseRepository.save(course);
 		
 		logger.info(">>> The entity was saved in the database.");
@@ -138,6 +149,15 @@ public class CourseService {
 		if(request.active() != null) {
 			logger.debug(">>> Setting active.");
 			course.setActive(request.active());
+		}
+		
+		if(!course.getCategory().getId().equals(request.categoryId())) {
+			logger.info(">>> Searching for Category entity in database.");
+			Category categoryPersisted = categoryRepository.findById(request.categoryId())
+					.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
+			
+			logger.debug(">>> Updating Category entity on lesson");
+			course.setCategory(categoryPersisted);
 		}
 		
 		logger.info(">>> The data has been updated.");
