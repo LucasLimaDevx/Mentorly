@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
 import com.lucasdevx.Mentorly.model.Enrollment;
-import com.lucasdevx.Mentorly.service.UserService;
 
 @Component
 public class EnrollmentMapper {

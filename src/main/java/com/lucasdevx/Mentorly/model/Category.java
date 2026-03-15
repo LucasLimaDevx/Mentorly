@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,5 +36,5 @@ public class Category{
 	private String description;
 
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Course> courses;
+	private Set<Course> courses = new HashSet<>();
 }
