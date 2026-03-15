@@ -14,7 +14,7 @@ public class LessonMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	public Lesson converterToEntity(LessonRequestDTO request) {
-		logger.info(">>> Converting DTO to Entity.");
+		logger.info(">>> Converting Lesson DTO to Entity.");
 		Lesson lesson = new Lesson();
 		
 		logger.debug(">>> Setting title.");
@@ -29,12 +29,12 @@ public class LessonMapper {
 		logger.debug(">>> Setting lessonOrder.");
 		lesson.setLessonOrder(request.lessonOrder());
 		
-		logger.info(">>> The DTO conversion was successful.");
+		logger.info(">>> The Lesson DTO conversion was successful.");
 		return lesson;
 	}
 	
 	public LessonResponseDTO converterToDto(Lesson lesson) {
-		logger.info(">>> Converting Entity to DTO.");
+		logger.info(">>> Converting Lesson Entity to DTO.");
 		
 		LessonResponseDTO response = new LessonResponseDTO(
 									 lesson.getId(),
@@ -43,7 +43,7 @@ public class LessonMapper {
 									 lesson.getVideoUrl(),
 									 lesson.getLessonOrder());
 		
-		logger.info(">>> The Entity conversion was successful.");
+		logger.info(">>> The Lesson Entity conversion was successful.");
 		
 		return response;
 	}

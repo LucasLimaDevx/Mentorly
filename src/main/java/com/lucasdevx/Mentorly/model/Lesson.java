@@ -37,7 +37,7 @@ public class Lesson{
 	private int lessonOrder;
 	
 	@ManyToOne
-	@JoinColumn(name = "course_id")
+	@JoinColumn(name = "course_id", nullable = false)
 	private Course course;
 	
 }

@@ -14,7 +14,7 @@ public class UserMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	public User converterToEntity(UserRequestDTO request) {
-		logger.info(">>> Converting DTO to Entity.");
+		logger.info(">>> Converting User DTO to Entity.");
 		
 		User user = new User();
 		
@@ -30,12 +30,12 @@ public class UserMapper {
 		logger.debug(">>> Setting password.");
 		user.setPassword(request.password());
 		
-		logger.info(">>> The DTO conversion was successful.");
+		logger.info(">>> The User DTO conversion was successful.");
 		return user;
 	}
 	
 	public UserResponseDTO converterToDto(User user) {
-		logger.info(">>> Converting Entity to DTO.");
+		logger.info(">>> Converting User Entity to DTO.");
 		
 		UserResponseDTO response = new UserResponseDTO(
 												user.getId(),
@@ -47,7 +47,7 @@ public class UserMapper {
 												user.getCreatedAt(),
 												user.getUpdatedAt());
 		
-		logger.info(">>> The Entity conversion was successful.");
+		logger.info(">>> The User Entity conversion was successful.");
 		
 		return response;
 	}

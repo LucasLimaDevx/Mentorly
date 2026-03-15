@@ -14,7 +14,7 @@ public class CategoryMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	public Category converterToEntity(CategoryRequestDTO request) {
-		logger.info(">>> Converting DTO to Entity.");
+		logger.info(">>> Converting Category DTO to Entity.");
 		
 		Category category = new Category();
 		
@@ -24,20 +24,20 @@ public class CategoryMapper {
 		logger.debug(">>> Setting description.");
 		category.setDescription(request.description());
 		
-		logger.info(">>> The DTO conversion was successful.");
+		logger.info(">>> The Category DTO conversion was successful.");
 		
 		return category;
 	}
 	
 	public CategoryResponseDTO converterToDto(Category category) {
-		logger.info(">>> Converting Entity to DTO.");
+		logger.info(">>> Converting Category Entity to DTO.");
 		
 		CategoryResponseDTO response = new CategoryResponseDTO(
 									   category.getId(),
 									   category.getTitle(),
 									   category.getDescription());
 		
-		logger.info(">>> The Entity conversion was successful.");
+		logger.info(">>> The Category Entity conversion was successful.");
 		
 		return response;
 	}

@@ -20,7 +20,7 @@ public class CourseMapper {
 	}
 	
 	public Course converterToEntity(CourseRequestDTO request) {
-		logger.info(">>> Converting DTO to Entity.");
+		logger.info(">>> Converting Course DTO to Entity.");
 		Course course = new Course();
 		
 		logger.debug(">>> Setting title.");
@@ -32,13 +32,13 @@ public class CourseMapper {
 		logger.debug(">>> Setting courseLevel");
 		course.setLevel(Level.valueOf(request.courseLevel()));
 		
-		logger.info(">>> The DTO conversion was successful.");
+		logger.info(">>> The Course DTO conversion was successful.");
 		
 		return course;
 	}
 	
 	public CourseResponseDTO converterToDto(Course course) {
-		logger.info(">>> Converting Entity to DTO.");
+		logger.info(">>> Converting Course Entity to DTO.");
 
 		CourseResponseDTO response = new CourseResponseDTO(
 									 course.getId(),
@@ -49,7 +49,7 @@ public class CourseMapper {
 									 course.getLevel().name(),
 									 categoryMapper.converterToDto(course.getCategory()));
 		
-		logger.info(">>> The Entity conversion was successful.");
+		logger.info(">>> The Course Entity conversion was successful.");
 		return response;
 		
 	}

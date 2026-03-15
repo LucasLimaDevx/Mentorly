@@ -13,14 +13,14 @@ public class CertificateMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	public CertificateResponseDTO converterToDto(Certificate certificate) {
-		logger.info(">>> Converting Entity to DTO.");
+		logger.info(">>> Converting Certificate Entity to DTO.");
 		
 		CertificateResponseDTO response = new CertificateResponseDTO(
 										  certificate.getId(),
 										  certificate.getIssueDate(),
 										  certificate.getValidateCode());
 		
-		logger.info(">>> The Entity conversion was successful.");
+		logger.info(">>> The Certificate Entity conversion was successful.");
 		
 		return response;
 	}

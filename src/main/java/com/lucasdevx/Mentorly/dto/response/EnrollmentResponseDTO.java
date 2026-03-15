@@ -8,4 +8,5 @@ public record EnrollmentResponseDTO(
 	Long id,
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	Date enrollmentDate,
-	int progressPercentage) {}
+	int progressPercentage,
+	CourseResponseDTO course) {}

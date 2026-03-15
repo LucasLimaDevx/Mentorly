@@ -16,21 +16,29 @@ import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.EnrollmentMapper;
+import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.model.Enrollment;
+import com.lucasdevx.Mentorly.repository.CourseRepository;
 import com.lucasdevx.Mentorly.repository.EnrollmentRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class EnrollmentService {
 
 	private EnrollmentRepository enrollmentRepository;
+	private CourseRepository courseRepository;
 	private EnrollmentMapper enrollmentMapper;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public EnrollmentService(EnrollmentRepository enrollmentRepository, EnrollmentMapper enrollmentMapper) {
+	public EnrollmentService(EnrollmentRepository enrollmentRepository, CourseRepository courseRepository, EnrollmentMapper enrollmentMapper) {
 		this.enrollmentRepository = enrollmentRepository;
+		this.courseRepository = courseRepository;
 		this.enrollmentMapper = enrollmentMapper;
+		
 	}
 	
+	@Transactional
 	public EntityModel<EnrollmentResponseDTO> create(EnrollmentRequestDTO request) {
 		logger.info(">>> Initializing the service's create method.");
 		
@@ -38,6 +46,13 @@ public class EnrollmentService {
 		
 		logger.debug(">>> Setting enrollmenDate");
 		enrollment.setEnrollmentDate(new Date());
+		
+		logger.info(">>> Searching for Course entity in database.");
+		Course coursePersisted = courseRepository.findById(request.courseId())
+				.orElseThrow(()-> new ObjectNotFoundException("Object Course Not Found"));
+		
+		logger.debug(">>> Setting course");
+		enrollment.setCourse(coursePersisted);
 		
 		logger.info(">>> Saving entity to database.");
 		
@@ -56,8 +71,6 @@ public class EnrollmentService {
 	public EntityModel<EnrollmentResponseDTO> findById(Long id) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
-		
-		
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id)
 				.orElseThrow(()-> new ObjectNotFoundException("Object Enrollment Not Found"));
 		
@@ -101,7 +114,7 @@ public class EnrollmentService {
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id).orElseThrow(
 				()-> new ObjectNotFoundException("Object Enrollment Not Found."));
 		
-		Enrollment enrollmentUpdated = updateDate(enrollmentPersisted, request);
+		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request);
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
 		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO);
@@ -121,10 +134,20 @@ public class EnrollmentService {
 		enrollmentRepository.deleteById(id);
 	}
 	
-	public Enrollment updateDate(Enrollment enrollment, EnrollmentRequestDTO request) {
+	public Enrollment updateData(Enrollment enrollment, EnrollmentRequestDTO request) {
 		logger.info(">>> Updating the data.");
 		
 		enrollment.setProgressPercentage(request.progressPercentage());
+		
+		if(!enrollment.getCourse().getId().equals(request.courseId())) {
+			logger.info(">>> Searching for Course entity in database.");
+			Course coursePersisted = courseRepository.findById(request.courseId())
+					.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
+			
+			logger.debug(">>> Updating Category entity on lesson");
+			enrollment.setCourse(coursePersisted);
+		}
+		
 		
 		logger.info(">>> The data has been updated.");
 		

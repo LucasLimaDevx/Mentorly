@@ -54,8 +54,12 @@ public class Course {
 	private Level level;
 	
 	@ManyToOne
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "category_id", nullable =  false)
 	private Category category;
+
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnore
+	private Set<Enrollment> enrollments = new HashSet<>();
 	
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonIgnore
