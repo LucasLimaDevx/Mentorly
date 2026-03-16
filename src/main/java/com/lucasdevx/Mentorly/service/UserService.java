@@ -16,23 +16,31 @@ import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.UserMapper;
+import com.lucasdevx.Mentorly.model.Role;
 import com.lucasdevx.Mentorly.model.User;
+import com.lucasdevx.Mentorly.model.enums.RoleEnum;
+import com.lucasdevx.Mentorly.repository.RoleRepository;
 import com.lucasdevx.Mentorly.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 
 @Service
 public class UserService {
 
 	private UserRepository userRepository;
+	private RoleRepository roleRepository;
 	private UserMapper userMapper;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public UserService(UserRepository userRepository, UserMapper userMapper) {
+	public UserService(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
 		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
 		this.userMapper = userMapper;
 	}
 	
+	@Transactional
 	public EntityModel<UserResponseDTO> create(UserRequestDTO request) {
 		logger.info(">>> Initializing the service's create method.");
 		
@@ -60,6 +68,7 @@ public class UserService {
 		return response;
 	}
 	
+	@Transactional
 	public EntityModel<UserResponseDTO> findById(Long id) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
@@ -77,6 +86,7 @@ public class UserService {
 		return response;
 	}
 	
+	@Transactional
 	public List<EntityModel<UserResponseDTO>> findAll() {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
@@ -98,6 +108,7 @@ public class UserService {
 		return responsesDTO;
 	}
 	
+	@Transactional
 	public EntityModel<UserResponseDTO> update(UserRequestDTO request ,Long id) {
 		logger.info(">>> Initializing the service's update method.");
 		logger.info(">>> Searching for entity in database.");
@@ -125,7 +136,7 @@ public class UserService {
 		logger.info(">>> Deleting Entity by ID");
 		userRepository.deleteById(id);
 	}
-	
+
 	public User updateData(User user, UserRequestDTO request) {
 		logger.info(">>> Updating the data.");
 		
@@ -151,8 +162,20 @@ public class UserService {
 			user.setActive(request.active());
 		}
 		
-		logger.info(">>> The data has been updated.");
+		logger.debug(">>> Checking if the role's request property is equals role's entity.");
+		String requestRole = request.role().toUpperCase();
+		String currentRole = user.getRoles().stream().findFirst().get().getRole().name();
+		if(!requestRole.equals(currentRole)) {
+
+			logger.debug(">>> Searching for Role entity in database.");
+			Role role = roleRepository.findByRole(RoleEnum.valueOf(requestRole));
+			
+			logger.debug(">>> Updating role.");
+			user.getRoles().clear();
+			user.getRoles().add(role);
+		}
 		
+		logger.info(">>> The data has been updated.");
 		return user;
 	}
 	

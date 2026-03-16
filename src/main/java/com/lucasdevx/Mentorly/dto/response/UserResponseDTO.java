@@ -10,6 +10,7 @@ public record UserResponseDTO(
 	String lastName,
 	String email,
 	String password,
+	String role,
 	Boolean active,
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	Date createdAt,

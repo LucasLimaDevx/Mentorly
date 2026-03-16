@@ -8,6 +8,7 @@ public record UserRequestDTO(
 	String lastName,
 	String email,
 	String password,
+	String role,
 	@JsonInclude(content = Include.NON_NULL)
 	Boolean active) {
 }
