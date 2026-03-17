@@ -30,7 +30,7 @@ public class CourseMapper {
 		course.setWorkloadHours(request.workloadHours());
 		
 		logger.debug(">>> Setting courseLevel");
-		course.setLevel(Level.valueOf(request.courseLevel()));
+		course.setLevel(Level.valueOf(request.courseLevel().toUpperCase()));
 		
 		logger.info(">>> The Course DTO conversion was successful.");
 		

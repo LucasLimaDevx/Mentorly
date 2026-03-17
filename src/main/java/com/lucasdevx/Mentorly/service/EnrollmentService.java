@@ -18,8 +18,10 @@ import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.EnrollmentMapper;
 import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.model.Enrollment;
+import com.lucasdevx.Mentorly.model.User;
 import com.lucasdevx.Mentorly.repository.CourseRepository;
 import com.lucasdevx.Mentorly.repository.EnrollmentRepository;
+import com.lucasdevx.Mentorly.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -28,12 +30,14 @@ public class EnrollmentService {
 
 	private EnrollmentRepository enrollmentRepository;
 	private CourseRepository courseRepository;
+	private UserRepository userRepository;
 	private EnrollmentMapper enrollmentMapper;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public EnrollmentService(EnrollmentRepository enrollmentRepository, CourseRepository courseRepository, EnrollmentMapper enrollmentMapper) {
+	public EnrollmentService(EnrollmentRepository enrollmentRepository, UserRepository userRepository, CourseRepository courseRepository, EnrollmentMapper enrollmentMapper) {
 		this.enrollmentRepository = enrollmentRepository;
 		this.courseRepository = courseRepository;
+		this.userRepository = userRepository;
 		this.enrollmentMapper = enrollmentMapper;
 		
 	}
@@ -50,6 +54,13 @@ public class EnrollmentService {
 		logger.info(">>> Searching for Course entity in database.");
 		Course coursePersisted = courseRepository.findById(request.courseId())
 				.orElseThrow(()-> new ObjectNotFoundException("Object Course Not Found"));
+		
+		logger.info(">>> Searching for User entity in database.");
+		User userPersisted = userRepository.findById(request.userId())
+				.orElseThrow(()-> new ObjectNotFoundException("Object User Not Found"));
+		
+		logger.debug(">>> Setting user");
+		enrollment.setUser(userPersisted);
 		
 		logger.debug(">>> Setting course");
 		enrollment.setCourse(coursePersisted);
@@ -146,6 +157,15 @@ public class EnrollmentService {
 			
 			logger.debug(">>> Updating Category entity on lesson");
 			enrollment.setCourse(coursePersisted);
+		}
+		
+		if(!enrollment.getUser().getId().equals(request.userId())) {
+			logger.info(">>> Searching for User entity in database.");
+			User userPersisted = userRepository.findById(request.userId())
+					.orElseThrow(()-> new ObjectNotFoundException("Object User not found."));
+			
+			logger.debug(">>> Updating User entity on lesson");
+			enrollment.setUser(userPersisted);
 		}
 		
 		
