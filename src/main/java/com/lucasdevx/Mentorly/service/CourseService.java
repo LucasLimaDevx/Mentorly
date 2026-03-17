@@ -114,8 +114,9 @@ public class CourseService {
 				()-> new ObjectNotFoundException("Object Course not found."));
 		
 		Course courseUpdated = updateData(coursePersisted, request);
+		coursePersisted = courseRepository.save(courseUpdated);
 		
-		CourseResponseDTO courseDTO = courseMapper.converterToDto(courseRepository.save(courseUpdated));
+		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
 		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO);
 		
 		logger.info(">>> Returning response.");
@@ -160,6 +161,7 @@ public class CourseService {
 			course.setCategory(categoryPersisted);
 		}
 		
+		
 		logger.info(">>> The data has been updated.");
 		return course;
 	}
@@ -179,4 +181,5 @@ public class CourseService {
 		return model;
 		
 	}
+	
 }

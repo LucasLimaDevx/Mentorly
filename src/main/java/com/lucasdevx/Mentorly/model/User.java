@@ -64,4 +64,7 @@ public class User{
 	
 	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Enrollment> enrollments = new HashSet<>();
+	
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Certificate> certificates = new HashSet<>();
 }

@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,9 +27,14 @@ public class Certificate{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "certificate_validateCode", nullable = false, length = 500)
-	private String validateCode;
-	
 	@Column(name = "certificate_issueDate", nullable = false)
 	private Date issueDate;
+	
+	@ManyToOne
+	@JoinColumn(name = "course_id")
+	private Course course;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 }

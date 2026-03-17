@@ -11,14 +11,20 @@ import com.lucasdevx.Mentorly.service.UserService;
 @Component
 public class CertificateMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-	
+	private CourseMapper courseMapper;
+	private UserMapper userMapper;
+	public CertificateMapper(CourseMapper courseMapper, UserMapper userMapper) {
+		this.courseMapper = courseMapper;
+		this.userMapper = userMapper;
+	}
 	public CertificateResponseDTO converterToDto(Certificate certificate) {
 		logger.info(">>> Converting Certificate Entity to DTO.");
 		
 		CertificateResponseDTO response = new CertificateResponseDTO(
 										  certificate.getId(),
 										  certificate.getIssueDate(),
-										  certificate.getValidateCode());
+										  courseMapper.converterToDto(certificate.getCourse()),
+										  userMapper.converterToDto(certificate.getUser()));
 		
 		logger.info(">>> The Certificate Entity conversion was successful.");
 		

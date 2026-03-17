@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lucasdevx.Mentorly.model.enums.Level;
 
 import jakarta.persistence.CascadeType;
@@ -58,11 +57,11 @@ public class Course {
 	private Category category;
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private Set<Enrollment> enrollments = new HashSet<>();
 	
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnore
 	private Set<Lesson> lessons = new HashSet<>();
 	
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<Certificate> certificates = new HashSet<>();
 }

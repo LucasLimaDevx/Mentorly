@@ -8,4 +8,5 @@ public record CertificateResponseDTO(
 	Long id,
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	Date issueDate,
-	String validationCode) {}
+	CourseResponseDTO course,
+	UserResponseDTO student) {}

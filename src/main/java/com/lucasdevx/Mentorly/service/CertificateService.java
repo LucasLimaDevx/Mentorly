@@ -17,6 +17,8 @@ import com.lucasdevx.Mentorly.mapper.CertificateMapper;
 import com.lucasdevx.Mentorly.model.Certificate;
 import com.lucasdevx.Mentorly.repository.CertificateRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CertificateService {
 
@@ -28,25 +30,8 @@ public class CertificateService {
 		this.certificateRepository = certificateRepository;
 		this.certificateMapper = certificateMapper;
 	}
-	/*
-	public CertificateResponseDTO create(CertificateRequestDTO request) {
-		
-		Certificate certificate = certificateMapper.converterToEntity(request);
-		
-		Date dateNow = new Date();
-		certificate.setCreatedAt(dateNow);
-		certificate.setUpdatedAt(dateNow);
-		
-		certificate.setActive(true);
-		
-		Certificate certificatePersisted = certificateRepository.save(certificate);
-		
-		CertificateResponseDTO response = certificateMapper.converterToDto(certificatePersisted);
-		
-		return response;
-	}
-	*/
-
+	
+	@Transactional
 	public EntityModel<CertificateResponseDTO> findById(Long id) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
@@ -64,6 +49,7 @@ public class CertificateService {
 		return response;
 	}
 	
+	@Transactional
 	public List<EntityModel<CertificateResponseDTO>> findAll() {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
@@ -83,23 +69,6 @@ public class CertificateService {
 		logger.info(">>> Returning response.");
 		return responsesDTO;
 	}	
-	
-	/*
-	public CertificateResponseDTO update(CertificateRequestDTO request ,Long id) {
-		Certificate certificatePersisted = certificateRepository.findById(id).orElseThrow(
-				()-> new ObjectNotFoundException("Object Certificate not found."));
-		
-		if(request.getActive() != null) { 
-			certificatePersisted.setActive(request.getActive());
-		}
-		
-		Certificate certificateUpdated = updateDate(certificatePersisted, request);
-		
-		CertificateResponseDTO response = certificateMapper.converterToDto(certificateRepository.save(certificateUpdated));
-		
-		return response;
-	}
-	*/
 	
 	public void delete(Long id) {
 		logger.info(">>> Initializing the service's delete method.");

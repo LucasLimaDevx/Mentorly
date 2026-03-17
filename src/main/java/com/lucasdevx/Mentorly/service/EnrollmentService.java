@@ -16,9 +16,11 @@ import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.EnrollmentMapper;
+import com.lucasdevx.Mentorly.model.Certificate;
 import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.model.Enrollment;
 import com.lucasdevx.Mentorly.model.User;
+import com.lucasdevx.Mentorly.repository.CertificateRepository;
 import com.lucasdevx.Mentorly.repository.CourseRepository;
 import com.lucasdevx.Mentorly.repository.EnrollmentRepository;
 import com.lucasdevx.Mentorly.repository.UserRepository;
@@ -31,12 +33,14 @@ public class EnrollmentService {
 	private EnrollmentRepository enrollmentRepository;
 	private CourseRepository courseRepository;
 	private UserRepository userRepository;
+	private CertificateRepository certificateRepository;
 	private EnrollmentMapper enrollmentMapper;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public EnrollmentService(EnrollmentRepository enrollmentRepository, UserRepository userRepository, CourseRepository courseRepository, EnrollmentMapper enrollmentMapper) {
+	public EnrollmentService(EnrollmentRepository enrollmentRepository, CertificateRepository certificateRepository,UserRepository userRepository, CourseRepository courseRepository, EnrollmentMapper enrollmentMapper) {
 		this.enrollmentRepository = enrollmentRepository;
 		this.courseRepository = courseRepository;
+		this.certificateRepository = certificateRepository;
 		this.userRepository = userRepository;
 		this.enrollmentMapper = enrollmentMapper;
 		
@@ -130,6 +134,9 @@ public class EnrollmentService {
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
 		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO);
 		
+		if( request.progressPercentage() == 100) {
+			addCertificate(enrollmentPersisted,request);
+		}
 		logger.info(">>> Returning response.");
 		
 		return response;
@@ -168,12 +175,22 @@ public class EnrollmentService {
 			enrollment.setUser(userPersisted);
 		}
 		
-		
 		logger.info(">>> The data has been updated.");
 		
 		return enrollment;
 	}
 	
+	public void addCertificate(Enrollment enrollmentPersisted,EnrollmentRequestDTO request) {
+		logger.info(">>> Adding Certificate.");
+		
+		Course coursePersisted = courseRepository.findById(request.courseId())
+				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
+		
+		Certificate certificate = new Certificate(null, new Date(), coursePersisted, enrollmentPersisted.getUser());
+		certificateRepository.save(certificate);
+		
+		logger.info(">>> Certificate was added.");
+	}
 	public EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO) {
 		Long id = enrollmentDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
