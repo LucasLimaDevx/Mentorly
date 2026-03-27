@@ -2,6 +2,7 @@ package com.lucasdevx.Mentorly.mapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
@@ -17,9 +18,11 @@ public class UserMapper {
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	private RoleRepository roleRepository;
+	private final PasswordEncoder passwordEncoder;
 	
-	public UserMapper(RoleRepository roleRepository) {
+	public UserMapper(RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
 		this.roleRepository = roleRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	public User converterToEntity(UserRequestDTO request) {
@@ -37,7 +40,7 @@ public class UserMapper {
 		user.setEmail(request.email());
 		
 		logger.debug(">>> Setting password.");
-		user.setPassword(request.password());
+		user.setPassword(passwordEncoder.encode(request.password()));
 		
 		logger.debug(">>> Searching for Role entity in database.");
 		Role role = roleRepository.findByRole(RoleEnum.valueOf(request.role().toUpperCase()));

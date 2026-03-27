@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lucasdevx.Mentorly.controller.UserController;
@@ -28,16 +29,18 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserService {
 
-	private UserRepository userRepository;
-	private RoleRepository roleRepository;
-	private UserMapper userMapper;
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final UserMapper userMapper;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public UserService(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper) {
+	public UserService(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.userMapper = userMapper;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	@Transactional
@@ -150,7 +153,7 @@ public class UserService {
 		user.setEmail(request.email());
 		
 		logger.debug(">>> Updating password.");
-		user.setPassword(request.password());
+		user.setPassword(passwordEncoder.encode(request.password()));
 		
 		logger.debug(">>> Updating date.");
 		user.setUpdatedAt(new Date());
