@@ -1,7 +1,6 @@
 package com.lucasdevx.Mentorly.config;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -19,6 +18,7 @@ public class TokenConfig {
 		Algorithm algorithm = Algorithm.HMAC256(secret); 
 		
 		return JWT.create()
+				.withIssuer("mentorly")
 				.withClaim("userId", user.getId())
 				.withSubject(user.getEmail())
 				.withExpiresAt(Instant.now().plusSeconds(86400))

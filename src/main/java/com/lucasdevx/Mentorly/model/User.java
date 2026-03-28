@@ -62,7 +62,7 @@ public class User implements UserDetails{
 	@Column(nullable = false)
 	private Date updatedAt;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
