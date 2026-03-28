@@ -1,10 +1,9 @@
 package com.lucasdevx.Mentorly.config;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.apache.logging.log4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +21,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter{
 	private final UserRepository userRepository;
 	private final TokenConfig tokenConfig;
-	private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 	
 	public SecurityFilter(UserRepository userRepository, TokenConfig tokenConfig) {
 		this.userRepository = userRepository;
@@ -37,12 +35,16 @@ public class SecurityFilter extends OncePerRequestFilter{
 		
 		if(Strings.isNotEmpty(authorizeHeader) && authorizeHeader.startsWith("Bearer ")) {
 			String token = authorizeHeader.replace("Bearer ", "");
-			String email = tokenConfig.validateToken(token);
-			UserDetails user = userRepository.findUserByEmail(email).get();
+			Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
 			
-			UsernamePasswordAuthenticationToken usernamePasswordToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-			
-			SecurityContextHolder.getContext().setAuthentication(usernamePasswordToken);
+			if(!optUser.isEmpty()) {
+				JWTUserData jwtUserData = optUser.get();
+				UserDetails user = userRepository.findUserByEmail(jwtUserData.email()).get();
+
+				UsernamePasswordAuthenticationToken usernamePasswordToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+				
+				SecurityContextHolder.getContext().setAuthentication(usernamePasswordToken);
+			}
 		}
 		
 		filterChain.doFilter(request, response);

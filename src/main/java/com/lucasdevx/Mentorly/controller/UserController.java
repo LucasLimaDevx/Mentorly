@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.config.JWTUserData;
+import com.lucasdevx.Mentorly.config.TokenConfig;
 import com.lucasdevx.Mentorly.controller.docs.UserControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
 import com.lucasdevx.Mentorly.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/users/v1")
@@ -30,10 +34,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class UserController implements UserControllerDocs {
 	
 	private UserService userService;
+	private TokenConfig tokenConfig;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public UserController(UserService userService) {
+	public UserController(UserService userService, TokenConfig tokenConfig) {
 		this.userService = userService;
+		this.tokenConfig = tokenConfig;
 	}
 	
 	@PostMapping(
@@ -73,6 +79,27 @@ public class UserController implements UserControllerDocs {
 		EntityModel<UserResponseDTO> response = userService.findById(id);
 		
 		logger.info(">>> Finishing the controller's findById method.");
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping(
+			value = "/me",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+		})
+	public ResponseEntity<EntityModel<UserResponseDTO>> findAuthUser(HttpServletRequest request) {
+		logger.info(">>> Initializing the controller's findAuthUser method.");
+		
+		String token = request.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		
+		Long id = optUser.get().userId();
+		
+		EntityModel<UserResponseDTO> response = userService.findById(id);
+		
+		logger.info(">>> Finishing the controller's findAuthUser method.");
 		return ResponseEntity.ok(response);
 	}
 	

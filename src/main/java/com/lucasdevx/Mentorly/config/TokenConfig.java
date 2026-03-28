@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.config;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class TokenConfig {
 				.sign(algorithm);
 	}
 	
-	public String validateToken(String token) {
+	public Optional<JWTUserData> validateToken(String token) {
 		Algorithm algorithm = Algorithm.HMAC256(secret);
 		
 		try {
@@ -36,10 +37,13 @@ public class TokenConfig {
 					.verify(token);
 			
 			
-			return decodeJWT.getSubject();
+			return Optional.of(JWTUserData.builder()
+					.userId(decodeJWT.getClaim("userId").asLong())
+					.email(decodeJWT.getSubject())
+					.build());
 		}
 		catch(JWTVerificationException ex) {
-			return "";
+			return Optional.empty();
 		}
 	}
 	
