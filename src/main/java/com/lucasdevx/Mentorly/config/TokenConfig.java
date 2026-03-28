@@ -26,7 +26,7 @@ public class TokenConfig {
 				.sign(algorithm);
 	}
 	
-	public Optional<JWTUserData> validateToken(String token) {
+	public String validateToken(String token) {
 		Algorithm algorithm = Algorithm.HMAC256(secret);
 		
 		try {
@@ -36,13 +36,10 @@ public class TokenConfig {
 					.verify(token);
 			
 			
-			return Optional.of(JWTUserData.builder()
-							.userId(decodeJWT.getClaim("userId").asLong())
-							.email(decodeJWT.getSubject())
-							.build());
+			return decodeJWT.getSubject();
 		}
 		catch(JWTVerificationException ex) {
-			return Optional.empty();
+			return "";
 		}
 	}
 	
