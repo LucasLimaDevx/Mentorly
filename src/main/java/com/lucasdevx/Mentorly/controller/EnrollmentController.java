@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.config.JWTUserData;
+import com.lucasdevx.Mentorly.config.TokenConfig;
 import com.lucasdevx.Mentorly.controller.docs.EnrollmentControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
@@ -24,20 +27,25 @@ import com.lucasdevx.Mentorly.service.EnrollmentService;
 import com.lucasdevx.Mentorly.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/enrollments/v1")
 @Tag(name = "Enrollment", description = "Endpoints for managing Enrollment.")
-public class EnrollmentController  implements EnrollmentControllerDocs {
+public class EnrollmentController implements EnrollmentControllerDocs {
 	
 	private EnrollmentService enrollmentService;
+	private TokenConfig tokenConfig;
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public EnrollmentController(EnrollmentService enrollmentService) {
+	public EnrollmentController(EnrollmentService enrollmentService, TokenConfig tokenConfig) {
 		this.enrollmentService = enrollmentService;
+		this.tokenConfig = tokenConfig;
 	}
 	
 	@PostMapping(
+			value = "/{userId}",
 			consumes = {
 				MediaType.APPLICATION_JSON_VALUE,
 				MediaType.APPLICATION_XML_VALUE,
@@ -49,12 +57,43 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 				}
 			)
-	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request) {
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request, @PathVariable("userId") Long userId) {
 		logger.info(">>> Initializing the controller's create method.");
-		
-		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request);
+
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request, userId);
 		
 		logger.info(">>> Finishing the controller's create method.");
+		
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@PostMapping(
+			value = "/me",
+			consumes = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+							},
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				}
+			)
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> createEnrollmentAuthUser(
+			@RequestBody EnrollmentRequestDTO request,
+			HttpServletRequest httpRequest) {
+		
+		logger.info(">>> Initializing the controller's createEnrollmentAuthUser method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		Long userId = optUser.get().userId();
+		
+		
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request, userId);
+		
+		logger.info(">>> Finishing the controller's createEnrollmentAuthUser method.");
 		
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
@@ -98,7 +137,7 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 	}
 	
 	@PutMapping(
-			value="/{id}",
+			value="/{id}/{userId}",
 			consumes = {
 				MediaType.APPLICATION_JSON_VALUE,
 				MediaType.APPLICATION_XML_VALUE,
@@ -109,14 +148,17 @@ public class EnrollmentController  implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(
+			@RequestBody EnrollmentRequestDTO request, 
+			@PathVariable Long id, 
+			@PathVariable Long userId) {
 		logger.info(">>> Initializing the controller's update method.");
 		
-		if(id <= 0) {
+		if(id <= 0 || userId <= 0) {
 			throw new IllegalArgumentException("The ID provided is not valid.");
 		}
 		
-		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id, userId);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		

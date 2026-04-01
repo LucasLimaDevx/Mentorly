@@ -1,3 +1,3 @@
 package com.lucasdevx.Mentorly.dto.request;
 
-public record EnrollmentRequestDTO(int progressPercentage, Long courseId, Long userId) {}
+public record EnrollmentRequestDTO(int progressPercentage, Long courseId) {}
