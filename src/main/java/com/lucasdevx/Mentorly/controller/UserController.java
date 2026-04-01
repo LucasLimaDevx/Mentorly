@@ -89,10 +89,10 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 		})
-	public ResponseEntity<EntityModel<UserResponseDTO>> findAuthUser(HttpServletRequest request) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> findAuthUser(HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's findAuthUser method.");
 		
-		String token = request.getHeader("Authorization").replace("Bearer ", "");
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
 		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
 		
 		Long id = optUser.get().userId();
@@ -143,6 +143,34 @@ public class UserController implements UserControllerDocs {
 		return ResponseEntity.ok(response);
 	}
 	
+	@PutMapping(
+			value = "/me",
+			consumes = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+			},
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+			})
+	public ResponseEntity<EntityModel<UserResponseDTO>> updateAuthUser(@RequestBody UserRequestDTO request, HttpServletRequest httpRequest) {
+		logger.info(">>> Initializing the controller's updateAuthUser method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		
+		Long id = optUser.get().userId();
+		
+		EntityModel<UserResponseDTO> response = userService.update(request, id);
+		
+		logger.info(">>> Finishing the controller's updateAuthUser method.");
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		logger.info(">>> Initializing the controller's delete method.");
@@ -153,6 +181,21 @@ public class UserController implements UserControllerDocs {
 		userService.delete(id);
 		
 		logger.info(">>> Finishing the controller's delete method.");
+		return ResponseEntity.noContent().build();
+	}
+	
+	@DeleteMapping("/me")
+	public ResponseEntity<Void> deleteAuthUser(HttpServletRequest httpRequest) {
+		logger.info(">>> Initializing the controller's deleteAuthUser method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		
+		Long id = optUser.get().userId();
+		
+		userService.delete(id);
+		
+		logger.info(">>> Finishing the controller's deleteAuthUser method.");
 		return ResponseEntity.noContent().build();
 	}
 }
