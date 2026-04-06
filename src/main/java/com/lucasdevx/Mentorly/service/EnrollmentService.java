@@ -145,7 +145,7 @@ public class EnrollmentService {
 		return responsesDTO;
 	}
 	
-	public EntityModel<EnrollmentResponseDTO> update(EnrollmentRequestDTO request ,Long id, Long userId) {
+	public EntityModel<EnrollmentResponseDTO> update(EnrollmentRequestDTO request ,Long id) {
 		logger.info(">>> Initializing the service's update method.");
 		logger.info(">>> Searching for entity in database.");
 		
@@ -153,7 +153,7 @@ public class EnrollmentService {
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id).orElseThrow(
 				()-> new ObjectNotFoundException("Object Enrollment Not Found."));
 		
-		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request, userId);
+		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request, enrollmentPersisted.getUser().getId());
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
 		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, enrollmentPersisted.getUser().getId());
@@ -222,7 +222,7 @@ public class EnrollmentService {
 				linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),
 				linkTo(methodOn(EnrollmentController.class).findAll()).withRel("findAll").withType("GET"),
 				linkTo(methodOn(EnrollmentController.class).create(null, null)).withRel("create").withType("POST"),
-				linkTo(methodOn(EnrollmentController.class).update(null, id, userId)).withRel("update").withType("PUT"),
+				linkTo(methodOn(EnrollmentController.class).update(null, id)).withRel("update").withType("PUT"),
 				linkTo(methodOn(EnrollmentController.class).delete(id)).withRel("delete").withType("DELETE"));
 		
 		logger.info(">>> The HATEOAS links have been successfully added.");

@@ -99,7 +99,7 @@ public interface EnrollmentControllerDocs {
 			}
 			
 	)
-	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id, @PathVariable Long userId);
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(@RequestBody EnrollmentRequestDTO request, @PathVariable Long id);
 	
 	@Operation(
 			summary = "Delete a Enrollment.",

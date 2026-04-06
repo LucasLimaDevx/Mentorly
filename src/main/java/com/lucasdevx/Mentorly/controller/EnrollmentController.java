@@ -130,7 +130,7 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 	}
 	
 	@PutMapping(
-			value="/{id}/{userId}",
+			value="/{id}",
 			consumes = {
 				MediaType.APPLICATION_JSON_VALUE,
 				MediaType.APPLICATION_XML_VALUE,
@@ -142,16 +142,14 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 				})
 	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> update(
-			@RequestBody EnrollmentRequestDTO request, 
-			@PathVariable Long id, 
-			@PathVariable Long userId) {
+			@RequestBody EnrollmentRequestDTO request, Long id) {
 		logger.info(">>> Initializing the controller's update method.");
 		
-		if(id <= 0 || userId <= 0) {
+		if(id <= 0 ) {
 			throw new IllegalArgumentException("The ID provided is not valid.");
 		}
 		
-		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id, userId);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.update(request, id);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
