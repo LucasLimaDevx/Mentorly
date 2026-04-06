@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface EnrollmentControllerDocs {
 	
@@ -35,7 +36,7 @@ public interface EnrollmentControllerDocs {
 			}
 			
 	)
-	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request, Long userId) ;
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request, HttpServletRequest httpRequest) ;
 	
 	@Operation(
 			summary = "Finds a Enrollment.",

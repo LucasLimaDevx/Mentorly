@@ -87,6 +87,7 @@ public class EnrollmentService {
 	public EntityModel<EnrollmentResponseDTO> findById(Long id) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
+		
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id)
 				.orElseThrow(()-> new ObjectNotFoundException("Object Enrollment Not Found"));
 		
@@ -101,30 +102,43 @@ public class EnrollmentService {
 		return response;
 	}
 	
-	public List<EntityModel<EnrollmentResponseDTO>> findAll() {
+	public List<EntityModel<EnrollmentResponseDTO>> findAll(Long userId) {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
+
 		List<Enrollment> enrollmentsPersisted = enrollmentRepository.findAll();
 		
 		logger.info(">>> The entities have been discovered.");
+
+		
+		if(userId == null) {			
+			List<EntityModel<EnrollmentResponseDTO>> responsesDTO = new ArrayList<>();
+			
+			List<EnrollmentResponseDTO> enrollmentsDTO = enrollmentsPersisted.stream()
+					.map((enrollmentDTO) -> enrollmentMapper.converterToDto(enrollmentDTO))
+					.toList();
+			
+			for(int i = 0 ; i < enrollmentsDTO.size() ; i++) {
+				EnrollmentResponseDTO enrollmentDTO = enrollmentsDTO.get(i);
+				Enrollment enrollment = enrollmentsPersisted.get(i);
+				
+				responsesDTO.add(addHateoasLinks(enrollmentDTO, enrollment.getUser().getId()));
+			}
+			
+			logger.info(">>> Returning response.");
+			
+			return responsesDTO;
+		}
 		
 		List<EnrollmentResponseDTO> enrollmentsDTO = enrollmentsPersisted.stream()
-				.map((response) -> enrollmentMapper.converterToDto(response))
+				.filter((enrollment) -> enrollment.getUser().getId().equals(userId))
+				.map((enrollment) -> enrollmentMapper.converterToDto(enrollment))
 				.toList();
 		
-		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = new ArrayList<>();
-		/*
-		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentsDTO.stream()
-				.map((enrollmentDTO) -> addHateoasLinks(enrollmentDTO))
-				.toList();*/
-		
-		for(int i = 0 ; i < enrollmentsDTO.size() ; i++) {
-			EnrollmentResponseDTO enrollmentDTO = enrollmentsDTO.get(i);
-			Enrollment enrollment = enrollmentsPersisted.get(i);
-			
-			responsesDTO.add(addHateoasLinks(enrollmentDTO, enrollment.getUser().getId()));
-		}
+		List<EntityModel<EnrollmentResponseDTO>> responsesDTO =  enrollmentsDTO.stream()
+				.map((enrollmentDTO) -> addHateoasLinks(enrollmentDTO, userId))
+				.toList();
 		
 		logger.info(">>> Returning response.");
 		
@@ -207,7 +221,7 @@ public class EnrollmentService {
 		EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
 				linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),
 				linkTo(methodOn(EnrollmentController.class).findAll()).withRel("findAll").withType("GET"),
-				linkTo(methodOn(EnrollmentController.class).create(null, id)).withRel("create").withType("POST"),
+				linkTo(methodOn(EnrollmentController.class).create(null, null)).withRel("create").withType("POST"),
 				linkTo(methodOn(EnrollmentController.class).update(null, id, userId)).withRel("update").withType("PUT"),
 				linkTo(methodOn(EnrollmentController.class).delete(id)).withRel("delete").withType("DELETE"));
 		

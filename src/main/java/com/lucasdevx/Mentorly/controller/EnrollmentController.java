@@ -45,7 +45,6 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 	}
 	
 	@PostMapping(
-			value = "/{userId}",
 			consumes = {
 				MediaType.APPLICATION_JSON_VALUE,
 				MediaType.APPLICATION_XML_VALUE,
@@ -57,48 +56,20 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 				}
 			)
-	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request, @PathVariable("userId") Long userId) {
+	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> create(@RequestBody EnrollmentRequestDTO request, HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's create method.");
-
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		Long userId = optUser.get().userId();
+		
 		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request, userId);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
-	
-	@PostMapping(
-			value = "/me",
-			consumes = {
-				MediaType.APPLICATION_JSON_VALUE,
-				MediaType.APPLICATION_XML_VALUE,
-				MediaType.APPLICATION_YAML_VALUE
-							},
-			produces = {
-				MediaType.APPLICATION_JSON_VALUE,
-				MediaType.APPLICATION_XML_VALUE,
-				MediaType.APPLICATION_YAML_VALUE
-				}
-			)
-	public ResponseEntity<EntityModel<EnrollmentResponseDTO>> createEnrollmentAuthUser(
-			@RequestBody EnrollmentRequestDTO request,
-			HttpServletRequest httpRequest) {
-		
-		logger.info(">>> Initializing the controller's createEnrollmentAuthUser method.");
-		
-		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
-		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
-		Long userId = optUser.get().userId();
-		
-		
-		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request, userId);
-		
-		logger.info(">>> Finishing the controller's createEnrollmentAuthUser method.");
-		
-		return new ResponseEntity<>(response, HttpStatus.CREATED);
-	}
-	
-	@GetMapping(
+		@GetMapping(
 			value = "/{id}",
 			produces = {
 				MediaType.APPLICATION_JSON_VALUE,
@@ -129,7 +100,29 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll();
+		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll(null);
+		
+		logger.info(">>> Finishing the controller's create method.");
+		
+		return ResponseEntity.ok(responsesDTO);
+	}
+	
+	@GetMapping(
+			value = "/me",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				}
+			)
+	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>>> findAllEnrollmentAuthUser(HttpServletRequest httpRequest) {
+		logger.info(">>> Initializing the controller's findAll method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		Long userId = optUser.get().userId();
+		
+		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll(userId);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
