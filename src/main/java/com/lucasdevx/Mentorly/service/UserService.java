@@ -113,14 +113,14 @@ public class UserService {
 	}
 	
 	@Transactional
-	public EntityModel<UserResponseDTO> update(UserRequestDTO request ,Long id) {
+	public EntityModel<UserResponseDTO> update(UserRequestDTO request ,Long id, String role) {
 		logger.info(">>> Initializing the service's update method.");
 		logger.info(">>> Searching for entity in database.");
 		
 		User userPersisted = userRepository.findById(id).orElseThrow(
 				()-> new ObjectNotFoundException("Object User not found."));
 		
-		User userUpdated = updateData(userPersisted, request);
+		User userUpdated = updateData(userPersisted, request, role);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userRepository.save(userUpdated));
 		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, userDTO.role());
@@ -141,7 +141,7 @@ public class UserService {
 		userRepository.deleteById(id);
 	}
 
-	public User updateData(User user, UserRequestDTO request) {
+	public User updateData(User user, UserRequestDTO request, String role) {
 		logger.info(">>> Updating the data.");
 		
 		logger.debug(">>> Updating first name.");
@@ -169,14 +169,38 @@ public class UserService {
 		logger.debug(">>> Checking if the role's request property is equals role's entity.");
 		String requestRole = request.role().toUpperCase();
 		String currentRole = user.getRoles().stream().findFirst().get().getRole().name();
-		if(!requestRole.equals(currentRole) && currentRole.equals("ADMIN")) {
+		
+		if(role.equals("ADMIN") && !requestRole.equals(currentRole)) {
 
 			logger.debug(">>> Searching for Role entity in database.");
-			Role role = roleRepository.findByRole(RoleEnum.valueOf(requestRole));
+			
+			
+			Role rolePersisted = roleRepository.findByRole(RoleEnum.valueOf(requestRole));
+			if(rolePersisted.getRole() == RoleEnum.USER) {
+				user.getRoles().clear();
+				Role roleStudent = roleRepository.findByRole(RoleEnum.STUDENT);
+				
+				user.getRoles().add(rolePersisted);
+				user.getRoles().add(roleStudent);
+			}
+			else {
+				user.getRoles().clear();
+				user.getRoles().add(rolePersisted);
+			}
+			/*
+			if(role.getRole() == RoleEnum.USER) {
+				user.getRoles().clear();
+				Role roleStudent = roleRepository.findByRole(RoleEnum.STUDENT);
+				
+				user.getRoles().add(role);
+				user.getRoles().add(roleStudent);
+			}
+			else {
+				user.getRoles().clear();
+				user.getRoles().add(role);
+			}*/
 			
 			logger.debug(">>> Updating role.");
-			user.getRoles().clear();
-			user.getRoles().add(role);
 		}
 		
 		logger.info(">>> The data has been updated.");
@@ -192,7 +216,7 @@ public class UserService {
 					linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
 					linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
 					linkTo(methodOn(UserController.class).create(null)).withRel("create").withType("POST"),
-					linkTo(methodOn(UserController.class).update(null, id)).withRel("update").withType("PUT"),
+					linkTo(methodOn(UserController.class).update(null, id, null)).withRel("update").withType("PUT"),
 					linkTo(methodOn(UserController.class).delete(id)).withRel("delete").withType("DELETE"));
 			
 			logger.info(">>> The HATEOAS links have been successfully added.");
@@ -201,9 +225,9 @@ public class UserService {
 		}
 		
 		EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
-				linkTo(methodOn(UserController.class).findAuthUser(null)).withSelfRel().withType("GET"),
-				linkTo(methodOn(UserController.class).updateAuthUser(null, null)).withRel("updateAuthUser").withType("PUT"),
-				linkTo(methodOn(UserController.class).deleteAuthUser(null)).withRel("deleteAuthUser").withType("DELETE"));
+				linkTo(methodOn(UserController.class).findAuthStudent(null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(UserController.class).updateAuthStudent(null, null)).withRel("updateAuthStudent").withType("PUT"),
+				linkTo(methodOn(UserController.class).deleteAuthStudent(null)).withRel("deleteAuthStudent").withType("DELETE"));
 		
 		logger.info(">>> The HATEOAS links have been successfully added.");
 		

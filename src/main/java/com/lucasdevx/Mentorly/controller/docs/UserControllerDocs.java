@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserControllerDocs{
 	
@@ -99,7 +100,7 @@ public interface UserControllerDocs{
 			}
 			
 	)
-	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id);
+	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id, HttpServletRequest httpRequest);
 	
 	@Operation(
 			summary = "Delete a User.",

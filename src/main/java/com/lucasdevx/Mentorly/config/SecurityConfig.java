@@ -21,13 +21,11 @@ public class SecurityConfig {
 	
 	public final SecurityFilter securityFilter;
 	
+	private static final String[] PUBLIC = {"/auth/v1/login", "/auth/v1/register"};
+	private static final String[] USER_GET_ENDPOINTS = {"/courses/**", "/lessons/**"};
+	
 	public SecurityConfig(SecurityFilter securityFilter) {
 		this.securityFilter = securityFilter;
-	}
-	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
 	}
 	
 	@Bean
@@ -38,24 +36,20 @@ public class SecurityConfig {
 				.authorizeHttpRequests(authorize -> 
 						authorize
 						.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-						.requestMatchers(HttpMethod.POST, "/auth/v1/login").permitAll()
-						.requestMatchers(HttpMethod.POST, "/auth/v1/register").permitAll()
-						.requestMatchers(HttpMethod.POST, "/enrollments/v1").hasRole("USER")
-						.requestMatchers(HttpMethod.GET, "/courses/**").hasRole("USER")
-						.requestMatchers(HttpMethod.GET, "/lessons/**").hasRole("USER")
-						.requestMatchers(HttpMethod.POST, "/*/v1/me").hasRole("USER")
-						.requestMatchers(HttpMethod.GET, "/*/v1/me").hasRole("USER")
-						.requestMatchers(HttpMethod.PUT, "/*/v1/me").hasRole("USER")
-						.requestMatchers(HttpMethod.DELETE, "/*/v1/me").hasRole("USER")
-						.requestMatchers(HttpMethod.POST, "/*/v1/**").hasRole("ADMIN")
-						.requestMatchers(HttpMethod.GET, "/*/v1/**").hasRole("ADMIN")
-						.requestMatchers(HttpMethod.PUT, "/*/v1/**").hasRole("ADMIN")
-						.requestMatchers(HttpMethod.DELETE, "/*/v1/**").hasRole("ADMIN")
-						
+						.requestMatchers(HttpMethod.POST, PUBLIC).permitAll()
+						.requestMatchers(HttpMethod.GET, USER_GET_ENDPOINTS).hasRole("USER")
+						.requestMatchers(HttpMethod.POST, "/enrollments/v1").hasRole("STUDENT")
+						.requestMatchers("/*/v1/me").hasRole("STUDENT")
+						.requestMatchers("/*/v1/**").hasRole("ADMIN")
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 	
 	@Bean

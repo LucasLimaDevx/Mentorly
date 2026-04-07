@@ -64,7 +64,7 @@ public class User implements UserDetails{
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			name = "user_role",
+			name = "tb_users_roles",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
@@ -83,7 +83,7 @@ public class User implements UserDetails{
 		if(role.getRole() == RoleEnum.ADMIN) {
 			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
 		}
-		return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		return List.of(new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_STUDENT"));
 	}
 
 	@Override

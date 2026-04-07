@@ -89,7 +89,7 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 		})
-	public ResponseEntity<EntityModel<UserResponseDTO>> findAuthUser(HttpServletRequest httpRequest) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> findAuthStudent(HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's findAuthUser method.");
 		
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
@@ -131,12 +131,17 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 			})
-	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id, HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's update method.");
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		String role = optUser.get().role();
+		
+		
 		if(id <= 0) {
 			throw new IllegalArgumentException("The ID provided is not valid.");
 		}
-		EntityModel<UserResponseDTO> response = userService.update(request, id);
+		EntityModel<UserResponseDTO> response = userService.update(request, id, role);
 		
 		logger.info(">>> Finishing the controller's update method.");
 		
@@ -155,15 +160,16 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 			})
-	public ResponseEntity<EntityModel<UserResponseDTO>> updateAuthUser(@RequestBody UserRequestDTO request, HttpServletRequest httpRequest) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> updateAuthStudent(@RequestBody UserRequestDTO request, HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's updateAuthUser method.");
 		
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
 		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
 		
 		Long id = optUser.get().userId();
+		String role = optUser.get().role();
 		
-		EntityModel<UserResponseDTO> response = userService.update(request, id);
+		EntityModel<UserResponseDTO> response = userService.update(request, id, role);
 		
 		logger.info(">>> Finishing the controller's updateAuthUser method.");
 		
@@ -185,7 +191,7 @@ public class UserController implements UserControllerDocs {
 	}
 	
 	@DeleteMapping("/me")
-	public ResponseEntity<Void> deleteAuthUser(HttpServletRequest httpRequest) {
+	public ResponseEntity<Void> deleteAuthStudent(HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's deleteAuthUser method.");
 		
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");

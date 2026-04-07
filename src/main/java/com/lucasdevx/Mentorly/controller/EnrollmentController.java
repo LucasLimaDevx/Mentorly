@@ -117,7 +117,7 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 				MediaType.APPLICATION_YAML_VALUE
 				}
 			)
-	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>>> findAllEnrollmentAuthUser(HttpServletRequest httpRequest) {
+	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>>> findAllEnrollmentAuthStudent(HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");

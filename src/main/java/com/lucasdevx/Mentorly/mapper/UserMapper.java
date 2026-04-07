@@ -46,7 +46,15 @@ public class UserMapper {
 		Role role = roleRepository.findByRole(RoleEnum.valueOf(request.role().toUpperCase()));
 		
 		logger.debug(">>> Setting role.");
-		user.getRoles().add(role);
+		
+		if(role.getRole() == RoleEnum.USER) {
+			Role roleStudent = roleRepository.findByRole(RoleEnum.STUDENT);
+			user.getRoles().add(role);
+			user.getRoles().add(roleStudent);
+		}
+		else {
+			user.getRoles().add(role);
+		}
 		
 		logger.info(">>> The User DTO conversion was successful.");
 		return user;
@@ -55,6 +63,10 @@ public class UserMapper {
 	public UserResponseDTO converterToDto(User user) {
 		logger.info(">>> Converting User Entity to DTO.");
 		String role = user.getRoles().stream().findFirst().get().getRole().name();
+		
+		if(role.equals("USER")){
+			role = "STUDENT";
+		}
 		
 		UserResponseDTO response = new UserResponseDTO(
 												user.getId(),
