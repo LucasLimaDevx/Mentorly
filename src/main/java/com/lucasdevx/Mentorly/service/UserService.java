@@ -44,7 +44,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public EntityModel<UserResponseDTO> create(UserRequestDTO request) {
+	public EntityModel<UserResponseDTO> create(UserRequestDTO request, String role) {
 		logger.info(">>> Initializing the service's create method.");
 		
 		User user = userMapper.converterToEntity(request);
@@ -64,7 +64,7 @@ public class UserService {
 		User userPersisted = userRepository.save(user);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
-		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO);
+		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, role.toUpperCase());
 		
 		logger.info(">>> Returning response.");
 		
@@ -82,7 +82,8 @@ public class UserService {
 		logger.info(">>> The entity was found.");
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
-		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO);
+		
+		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, userDTO.role());
 		
 		logger.info(">>> Returning response.");
 		
@@ -90,7 +91,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public List<EntityModel<UserResponseDTO>> findAll() {
+	public List<EntityModel<UserResponseDTO>> findAll(String role) {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
@@ -103,7 +104,7 @@ public class UserService {
 				.toList();
 		
 		List<EntityModel<UserResponseDTO>> responsesDTO = usersDTO.stream()
-				.map((userDTO) -> addHateoasLinks(userDTO))
+				.map((userDTO) -> addHateoasLinks(userDTO, userDTO.role()))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -122,7 +123,7 @@ public class UserService {
 		User userUpdated = updateData(userPersisted, request);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userRepository.save(userUpdated));
-		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO);
+		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, userDTO.role());
 		
 		logger.info(">>> Returning response.");
 		
@@ -168,7 +169,7 @@ public class UserService {
 		logger.debug(">>> Checking if the role's request property is equals role's entity.");
 		String requestRole = request.role().toUpperCase();
 		String currentRole = user.getRoles().stream().findFirst().get().getRole().name();
-		if(!requestRole.equals(currentRole)) {
+		if(!requestRole.equals(currentRole) && currentRole.equals("ADMIN")) {
 
 			logger.debug(">>> Searching for Role entity in database.");
 			Role role = roleRepository.findByRole(RoleEnum.valueOf(requestRole));
@@ -182,19 +183,32 @@ public class UserService {
 		return user;
 	}
 	
-	public EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO) {
+	public EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO, String role) {
 		Long id = userDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
+		
+		if(role != null && role.equals("ADMIN")) {
+			EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
+					linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
+					linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
+					linkTo(methodOn(UserController.class).create(null)).withRel("create").withType("POST"),
+					linkTo(methodOn(UserController.class).update(null, id)).withRel("update").withType("PUT"),
+					linkTo(methodOn(UserController.class).delete(id)).withRel("delete").withType("DELETE"));
+			
+			logger.info(">>> The HATEOAS links have been successfully added.");
+			
+			return model;
+		}
+		
 		EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
-				linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
-				linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
-				linkTo(methodOn(UserController.class).create(null)).withRel("create").withType("POST"),
-				linkTo(methodOn(UserController.class).update(null, id)).withRel("update").withType("PUT"),
-				linkTo(methodOn(UserController.class).delete(id)).withRel("delete").withType("DELETE"));
+				linkTo(methodOn(UserController.class).findAuthUser(null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(UserController.class).updateAuthUser(null, null)).withRel("updateAuthUser").withType("PUT"),
+				linkTo(methodOn(UserController.class).deleteAuthUser(null)).withRel("deleteAuthUser").withType("DELETE"));
 		
 		logger.info(">>> The HATEOAS links have been successfully added.");
 		
 		return model;
+		
 		
 	}
 }

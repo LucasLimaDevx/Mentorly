@@ -56,7 +56,7 @@ public class UserController implements UserControllerDocs {
 	public ResponseEntity<EntityModel<UserResponseDTO> > create(@RequestBody UserRequestDTO request) {
 		logger.info(">>> Initializing the controller's create method.");
 		
-		EntityModel<UserResponseDTO> response = userService.create(request);
+		EntityModel<UserResponseDTO> response = userService.create(request, null);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -112,7 +112,7 @@ public class UserController implements UserControllerDocs {
 	public ResponseEntity<List<EntityModel<UserResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EntityModel<UserResponseDTO>> responsesDTO = userService.findAll();
+		List<EntityModel<UserResponseDTO>> responsesDTO = userService.findAll(null);
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		

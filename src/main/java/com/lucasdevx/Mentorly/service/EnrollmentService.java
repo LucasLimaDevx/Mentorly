@@ -3,7 +3,6 @@ package com.lucasdevx.Mentorly.service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class EnrollmentService {
 	}
 	
 	@Transactional
-	public EntityModel<EnrollmentResponseDTO> create(EnrollmentRequestDTO request, Long userId) {
+	public EntityModel<EnrollmentResponseDTO> create(EnrollmentRequestDTO request, Long userId, String role) {
 		logger.info(">>> Initializing the service's create method.");
 		
 		Enrollment enrollment = enrollmentMapper.converterToEntity(request);
@@ -77,7 +76,7 @@ public class EnrollmentService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentPersisted);
-		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, userId);
+		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, role);
 		
 		logger.info(">>> Returning response.");
 		
@@ -95,37 +94,29 @@ public class EnrollmentService {
 		logger.info(">>> The entity was found.");
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentPersisted);
-		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, enrollmentPersisted.getUser().getId());
+		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
-	public List<EntityModel<EnrollmentResponseDTO>> findAll(Long userId) {
+	public List<EntityModel<EnrollmentResponseDTO>> findAll(Long userId, String role) {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
-
 		List<Enrollment> enrollmentsPersisted = enrollmentRepository.findAll();
 		
 		logger.info(">>> The entities have been discovered.");
-
 		
-		if(userId == null) {			
-			List<EntityModel<EnrollmentResponseDTO>> responsesDTO = new ArrayList<>();
-			
+		if(userId == null) {				
 			List<EnrollmentResponseDTO> enrollmentsDTO = enrollmentsPersisted.stream()
-					.map((enrollmentDTO) -> enrollmentMapper.converterToDto(enrollmentDTO))
+					.map((enrollment) -> enrollmentMapper.converterToDto(enrollment))
 					.toList();
 			
-			for(int i = 0 ; i < enrollmentsDTO.size() ; i++) {
-				EnrollmentResponseDTO enrollmentDTO = enrollmentsDTO.get(i);
-				Enrollment enrollment = enrollmentsPersisted.get(i);
+			List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentsDTO.stream()
+					.map((responseDTO) -> addHateoasLinks(responseDTO, null)).toList();
 				
-				responsesDTO.add(addHateoasLinks(enrollmentDTO, enrollment.getUser().getId()));
-			}
-			
 			logger.info(">>> Returning response.");
 			
 			return responsesDTO;
@@ -137,7 +128,7 @@ public class EnrollmentService {
 				.toList();
 		
 		List<EntityModel<EnrollmentResponseDTO>> responsesDTO =  enrollmentsDTO.stream()
-				.map((enrollmentDTO) -> addHateoasLinks(enrollmentDTO, userId))
+				.map((enrollmentDTO) -> addHateoasLinks(enrollmentDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -153,14 +144,15 @@ public class EnrollmentService {
 		Enrollment enrollmentPersisted = enrollmentRepository.findById(id).orElseThrow(
 				()-> new ObjectNotFoundException("Object Enrollment Not Found."));
 		
-		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request, enrollmentPersisted.getUser().getId());
+		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request);
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
-		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, enrollmentPersisted.getUser().getId());
+		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, null);
 		
-		if( request.progressPercentage() == 100) {
-			addCertificate(enrollmentPersisted,request);
+		if(request.progressPercentage() == 100) {
+			addCertificate(enrollmentPersisted);
 		}
+		
 		logger.info(">>> Returning response.");
 		
 		return response;
@@ -176,9 +168,10 @@ public class EnrollmentService {
 		enrollmentRepository.deleteById(id);
 	}
 	
-	public Enrollment updateData(Enrollment enrollment, EnrollmentRequestDTO request, Long userId) {
+	public Enrollment updateData(Enrollment enrollment, EnrollmentRequestDTO request) {
 		logger.info(">>> Updating the data.");
 		
+		logger.info(">>> Updating progressPercentage.");
 		enrollment.setProgressPercentage(request.progressPercentage());
 		
 		if(!enrollment.getCourse().getId().equals(request.courseId())) {
@@ -190,24 +183,15 @@ public class EnrollmentService {
 			enrollment.setCourse(coursePersisted);
 		}
 		
-		if(!enrollment.getUser().getId().equals(userId)) {
-			logger.info(">>> Searching for User entity in database.");
-			User userPersisted = userRepository.findById(userId)
-					.orElseThrow(()-> new ObjectNotFoundException("Object User not found."));
-			
-			logger.debug(">>> Updating User entity on lesson");
-			enrollment.setUser(userPersisted);
-		}
-		
 		logger.info(">>> The data has been updated.");
 		
 		return enrollment;
 	}
 	
-	public void addCertificate(Enrollment enrollmentPersisted,EnrollmentRequestDTO request) {
+	public void addCertificate(Enrollment enrollmentPersisted) {
 		logger.info(">>> Adding Certificate.");
 		
-		Course coursePersisted = courseRepository.findById(request.courseId())
+		Course coursePersisted = courseRepository.findById(enrollmentPersisted.getCourse().getId())			
 				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
 		
 		Certificate certificate = new Certificate(null, new Date(), coursePersisted, enrollmentPersisted.getUser());
@@ -215,15 +199,27 @@ public class EnrollmentService {
 		
 		logger.info(">>> Certificate was added.");
 	}
-	public EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO, Long userId) {
+	
+	public EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO, String role) {
 		Long id = enrollmentDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
+		
+		if(role == null || role.equals("ADMIN")) {
+			EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
+					linkTo(methodOn(EnrollmentController.class).create(null, null)).withRel("create").withType("POST"),
+					linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),
+					linkTo(methodOn(EnrollmentController.class).findAll()).withRel("findAll").withType("GET"),
+					linkTo(methodOn(EnrollmentController.class).update(null, id)).withRel("update").withType("PUT"),
+					linkTo(methodOn(EnrollmentController.class).delete(id)).withRel("delete").withType("DELETE"));
+			
+			logger.info(">>> The HATEOAS links have been successfully added.");
+			
+			return model;
+		}
+		
 		EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
-				linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),
-				linkTo(methodOn(EnrollmentController.class).findAll()).withRel("findAll").withType("GET"),
 				linkTo(methodOn(EnrollmentController.class).create(null, null)).withRel("create").withType("POST"),
-				linkTo(methodOn(EnrollmentController.class).update(null, id)).withRel("update").withType("PUT"),
-				linkTo(methodOn(EnrollmentController.class).delete(id)).withRel("delete").withType("DELETE"));
+				linkTo(methodOn(EnrollmentController.class).findAllEnrollmentAuthUser(null)).withRel("findAllEnrollmentAuthUser").withType("GET"));
 		
 		logger.info(">>> The HATEOAS links have been successfully added.");
 		

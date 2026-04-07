@@ -23,6 +23,7 @@ public class TokenConfig {
 				.withClaim("userId", user.getId())
 				.withSubject(user.getEmail())
 				.withExpiresAt(Instant.now().plusSeconds(86400))
+				.withClaim("role", user.getRoles().stream().findFirst().get().getRole().name())
 				.withIssuedAt(Instant.now())
 				.sign(algorithm);
 	}
@@ -40,6 +41,7 @@ public class TokenConfig {
 			return Optional.of(JWTUserData.builder()
 					.userId(decodeJWT.getClaim("userId").asLong())
 					.email(decodeJWT.getSubject())
+					.role(decodeJWT.getClaim("role").asString())
 					.build());
 		}
 		catch(JWTVerificationException ex) {

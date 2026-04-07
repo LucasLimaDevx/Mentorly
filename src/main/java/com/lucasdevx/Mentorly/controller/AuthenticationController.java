@@ -82,7 +82,7 @@ public class AuthenticationController {
 	public ResponseEntity<EntityModel<UserResponseDTO>> register(@RequestBody UserRequestDTO request){
 		logger.info(">>> Initializing the controller's register method.");
 		
-		EntityModel<UserResponseDTO> response = userService.create(request);
+		EntityModel<UserResponseDTO> response = userService.create(request, request.role());
 		
 		logger.info(">>> Finishing the controller's register method.");
 		return new ResponseEntity<>(response, HttpStatus.CREATED);

@@ -61,9 +61,11 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 		
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
 		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
-		Long userId = optUser.get().userId();
 		
-		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request, userId);
+		Long userId = optUser.get().userId();
+		String role = optUser.get().role();
+		
+		EntityModel<EnrollmentResponseDTO> response = enrollmentService.create(request, userId, role);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
@@ -100,7 +102,7 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 	public ResponseEntity<List<EntityModel<EnrollmentResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll(null);
+		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll(null, null);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
@@ -121,8 +123,9 @@ public class EnrollmentController implements EnrollmentControllerDocs {
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
 		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
 		Long userId = optUser.get().userId();
+		String role = optUser.get().role();
 		
-		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll(userId);
+		List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentService.findAll(userId, role);
 		
 		logger.info(">>> Finishing the controller's create method.");
 		
