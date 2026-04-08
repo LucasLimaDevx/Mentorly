@@ -112,7 +112,7 @@ public class UserController implements UserControllerDocs {
 	public ResponseEntity<List<EntityModel<UserResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EntityModel<UserResponseDTO>> responsesDTO = userService.findAll(null);
+		List<EntityModel<UserResponseDTO>> responsesDTO = userService.findAll();
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		

@@ -3,7 +3,6 @@ package com.lucasdevx.Mentorly.service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.awt.datatransfer.StringSelection;
 import java.util.Date;
 import java.util.List;
 

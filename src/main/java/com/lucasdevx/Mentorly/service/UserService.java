@@ -91,7 +91,7 @@ public class UserService {
 	}
 	
 	@Transactional
-	public List<EntityModel<UserResponseDTO>> findAll(String role) {
+	public List<EntityModel<UserResponseDTO>> findAll() {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
