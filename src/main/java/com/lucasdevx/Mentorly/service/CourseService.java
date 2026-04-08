@@ -3,9 +3,11 @@ package com.lucasdevx.Mentorly.service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.awt.datatransfer.StringSelection;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
@@ -61,14 +63,14 @@ public class CourseService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
-		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO);
+		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
-	public  EntityModel<CourseResponseDTO> findById(Long id) {
+	public  EntityModel<CourseResponseDTO> findById(Long id, String role) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
 		
@@ -78,14 +80,14 @@ public class CourseService {
 		logger.info(">>> The entity was found.");
 		
 		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
-		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO);
+		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO, role);
 		
 		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
-	public List< EntityModel<CourseResponseDTO>> findAll() {
+	public List< EntityModel<CourseResponseDTO>> findAll(String role) {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
@@ -98,7 +100,7 @@ public class CourseService {
 				.toList();
 		
 		List<EntityModel<CourseResponseDTO>> responsesDTO = coursesDTO.stream()
-				.map((courseDTO) -> addHateoasLinks(courseDTO))
+				.map((courseDTO) -> addHateoasLinks(courseDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -117,7 +119,7 @@ public class CourseService {
 		coursePersisted = courseRepository.save(courseUpdated);
 		
 		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
-		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO);
+		EntityModel<CourseResponseDTO> response = addHateoasLinks(courseDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -166,17 +168,25 @@ public class CourseService {
 		return course;
 	}
 	
-	public EntityModel<CourseResponseDTO> addHateoasLinks(CourseResponseDTO courseDTO) {
+	public EntityModel<CourseResponseDTO> addHateoasLinks(CourseResponseDTO courseDTO, String role) {
 		Long id = courseDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
-		EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
-				linkTo(methodOn(CourseController.class).findById(id)).withSelfRel().withType("GET"),
-				linkTo(methodOn(CourseController.class).findAll()).withRel("findAll").withType("GET"),
+		
+		if(Strings.isBlank(role)) {
+			EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
+				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
 				linkTo(methodOn(CourseController.class).create(null)).withRel("create").withType("POST"),
 				linkTo(methodOn(CourseController.class).update(null, id)).withRel("update").withType("PUT"),
 				linkTo(methodOn(CourseController.class).delete(id)).withRel("delete").withType("DELETE"));
+			
+			logger.info(">>> The HATEOAS links have been successfully added.");
+			return model;
+		}
 		
-		logger.info(">>> The HATEOAS links have been successfully added.");
+		EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
+				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"));
 		
 		return model;
 		
