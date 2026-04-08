@@ -187,18 +187,6 @@ public class UserService {
 				user.getRoles().clear();
 				user.getRoles().add(rolePersisted);
 			}
-			/*
-			if(role.getRole() == RoleEnum.USER) {
-				user.getRoles().clear();
-				Role roleStudent = roleRepository.findByRole(RoleEnum.STUDENT);
-				
-				user.getRoles().add(role);
-				user.getRoles().add(roleStudent);
-			}
-			else {
-				user.getRoles().clear();
-				user.getRoles().add(role);
-			}*/
 			
 			logger.debug(">>> Updating role.");
 		}
@@ -211,7 +199,7 @@ public class UserService {
 		Long id = userDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		
-		if(role != null && role.equals("ADMIN")) {
+		if(role.equals("ADMIN")) {
 			EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
 					linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
 					linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
