@@ -170,7 +170,7 @@ public class UserService {
 		String requestRole = request.role().toUpperCase();
 		String currentRole = user.getRoles().stream().findFirst().get().getRole().name();
 		
-		if(role.equals("ADMIN") && !requestRole.equals(currentRole)) {
+		if(role == null && !requestRole.equals(currentRole)) {
 
 			logger.debug(">>> Searching for Role entity in database.");
 			
@@ -216,7 +216,7 @@ public class UserService {
 					linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
 					linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
 					linkTo(methodOn(UserController.class).create(null)).withRel("create").withType("POST"),
-					linkTo(methodOn(UserController.class).update(null, id, null)).withRel("update").withType("PUT"),
+					linkTo(methodOn(UserController.class).update(null, id)).withRel("update").withType("PUT"),
 					linkTo(methodOn(UserController.class).delete(id)).withRel("delete").withType("DELETE"));
 			
 			logger.info(">>> The HATEOAS links have been successfully added.");

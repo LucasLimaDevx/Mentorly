@@ -131,17 +131,19 @@ public class UserController implements UserControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 			})
-	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id, HttpServletRequest httpRequest) {
+	public ResponseEntity<EntityModel<UserResponseDTO>> update(@RequestBody UserRequestDTO request, @PathVariable Long id) {
 		logger.info(">>> Initializing the controller's update method.");
+		/*
 		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
 		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
-		String role = optUser.get().role();
+		String role = optUser.get().role();*/
 		
 		
 		if(id <= 0) {
 			throw new IllegalArgumentException("The ID provided is not valid.");
 		}
-		EntityModel<UserResponseDTO> response = userService.update(request, id, role);
+		
+		EntityModel<UserResponseDTO> response = userService.update(request, id, null);
 		
 		logger.info(">>> Finishing the controller's update method.");
 		
