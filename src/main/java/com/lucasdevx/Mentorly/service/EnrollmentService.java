@@ -6,7 +6,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
@@ -110,7 +109,7 @@ public class EnrollmentService {
 		
 		logger.info(">>> The entities have been discovered.");
 		
-		if(Strings.isBlank(role)) {
+		if(role == null) {
 			
 			List<EnrollmentResponseDTO> enrollmentsDTO = enrollmentsPersisted.stream()
 					.map((enrollment) -> enrollmentMapper.converterToDto(enrollment))
@@ -206,7 +205,7 @@ public class EnrollmentService {
 		Long id = enrollmentDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		
-		if(Strings.isBlank(role)) {
+		if(role == null) {
 			EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
 					linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),
 					linkTo(methodOn(EnrollmentController.class).findAll()).withRel("findAll").withType("GET"),
