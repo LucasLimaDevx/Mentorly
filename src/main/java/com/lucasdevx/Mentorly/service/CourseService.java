@@ -6,7 +6,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
@@ -171,7 +170,7 @@ public class CourseService {
 		Long id = courseDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		
-		if(Strings.isBlank(role)) {
+		if(role == null || role.equals("ADMIN")) {
 			EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
 				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
 				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
