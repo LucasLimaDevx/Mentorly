@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface LessonControllerDocs {
 	
@@ -53,7 +54,7 @@ public interface LessonControllerDocs {
 			}
 			
 	)
-	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id);
+	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id, HttpServletRequest httpRequest);
 	
 	@Operation(
 			summary = "Find All Lesson.",
@@ -80,7 +81,7 @@ public interface LessonControllerDocs {
 			}
 			
 	)
-	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll();
+	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll(HttpServletRequest httpRequest);
 	
 	@Operation(
 			summary = "Update a Lesson.",

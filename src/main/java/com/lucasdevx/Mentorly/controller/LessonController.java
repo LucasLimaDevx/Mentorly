@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.config.JWTUserData;
+import com.lucasdevx.Mentorly.config.TokenConfig;
 import com.lucasdevx.Mentorly.controller.docs.LessonControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.LessonRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
@@ -24,6 +27,7 @@ import com.lucasdevx.Mentorly.service.LessonService;
 import com.lucasdevx.Mentorly.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/lessons/v1")
@@ -31,10 +35,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class LessonController  implements LessonControllerDocs {
 	
 	private LessonService lessonService;
+	private TokenConfig tokenConfig;
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public LessonController(LessonService lessonService) {
+	public LessonController(LessonService lessonService, TokenConfig tokenConfig) {
 		this.lessonService = lessonService;
+		this.tokenConfig = tokenConfig;
 	}
 	
 	@PostMapping(
@@ -64,14 +71,18 @@ public class LessonController  implements LessonControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id) {
+	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id, HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's findById method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		String role = optUser.get().role();
 		
 		if(id <= 0) {
 			throw new IllegalArgumentException("The ID provided is not valid.");
 		}
 		
-		EntityModel<LessonResponseDTO> response = lessonService.findById(id);
+		EntityModel<LessonResponseDTO> response = lessonService.findById(id, role);
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		
@@ -84,10 +95,14 @@ public class LessonController  implements LessonControllerDocs {
 				MediaType.APPLICATION_XML_VALUE,
 				MediaType.APPLICATION_YAML_VALUE
 				})
-	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll() {
+	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll(HttpServletRequest httpRequest) {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EntityModel<LessonResponseDTO>> responsesDTO = lessonService.findAll();
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		String role = optUser.get().role();
+		
+		List<EntityModel<LessonResponseDTO>> responsesDTO = lessonService.findAll(role);
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		

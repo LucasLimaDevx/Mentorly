@@ -53,14 +53,14 @@ public class LessonService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		LessonResponseDTO lessonDTO = lessonMapper.converterToDto(lessonPersisted);
-		EntityModel<LessonResponseDTO> response = addHateoasLinks(lessonDTO);
+		EntityModel<LessonResponseDTO> response = addHateoasLinks(lessonDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
 		return response;
 	}
 	
-	public EntityModel<LessonResponseDTO> findById(Long id) {
+	public EntityModel<LessonResponseDTO> findById(Long id, String role) {
 		logger.info(">>> Initializing the service's findById method.");
 		logger.info(">>> Searching for entity in database.");
 		
@@ -70,13 +70,13 @@ public class LessonService {
 		logger.info(">>> The entity was found.");
 		
 		LessonResponseDTO lessonDTO = lessonMapper.converterToDto(lessonPersisted);
-		EntityModel<LessonResponseDTO> response = addHateoasLinks(lessonDTO);
+		EntityModel<LessonResponseDTO> response = addHateoasLinks(lessonDTO, role);
 		
 		logger.info(">>> Returning response.");
 		return response;
 	}
 	
-	public List<EntityModel<LessonResponseDTO>> findAll() {
+	public List<EntityModel<LessonResponseDTO>> findAll(String role) {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
@@ -89,7 +89,7 @@ public class LessonService {
 				.toList();
 		
 		List<EntityModel<LessonResponseDTO>> responsesDTO = lessonsDTO.stream()
-				.map((lessonDTO) -> addHateoasLinks(lessonDTO))
+				.map((lessonDTO) -> addHateoasLinks(lessonDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -106,7 +106,7 @@ public class LessonService {
 		Lesson lessonUpdated = updateData(lessonPersisted, request);
 	
 		LessonResponseDTO lessonDTO = lessonMapper.converterToDto(lessonRepository.save(lessonUpdated));
-		EntityModel<LessonResponseDTO> response = addHateoasLinks(lessonDTO);
+		EntityModel<LessonResponseDTO> response = addHateoasLinks(lessonDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -152,19 +152,30 @@ public class LessonService {
 		return lesson;
 	}
 	
-	public EntityModel<LessonResponseDTO> addHateoasLinks(LessonResponseDTO lessonDTO) {
+	public EntityModel<LessonResponseDTO> addHateoasLinks(LessonResponseDTO lessonDTO, String role) {
 		Long id = lessonDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
+		
+		if(role == null || role.equals("ADMIN")) {
+
+			EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
+					linkTo(methodOn(LessonController.class).findById(id, null)).withSelfRel().withType("GET"),
+					linkTo(methodOn(LessonController.class).findAll(null)).withRel("findAll").withType("GET"),
+					linkTo(methodOn(LessonController.class).create(null)).withRel("create").withType("POST"),
+					linkTo(methodOn(LessonController.class).update(null, id)).withRel("update").withType("PUT"),
+					linkTo(methodOn(LessonController.class).delete(id)).withRel("delete").withType("DELETE"));
+			
+			logger.info(">>> The HATEOAS links have been successfully added.");
+			
+			return model;
+		}
+		
 		EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
-				linkTo(methodOn(LessonController.class).findById(id)).withSelfRel().withType("GET"),
-				linkTo(methodOn(LessonController.class).findAll()).withRel("findAll").withType("GET"),
-				linkTo(methodOn(LessonController.class).create(null)).withRel("create").withType("POST"),
-				linkTo(methodOn(LessonController.class).update(null, id)).withRel("update").withType("PUT"),
-				linkTo(methodOn(LessonController.class).delete(id)).withRel("delete").withType("DELETE"));
+				linkTo(methodOn(LessonController.class).findById(id, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(LessonController.class).findAll(null)).withRel("findAll").withType("GET"));
 		
 		logger.info(">>> The HATEOAS links have been successfully added.");
 		
 		return model;
-		
 	}
 }
