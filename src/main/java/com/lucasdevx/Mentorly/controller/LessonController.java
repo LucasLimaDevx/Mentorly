@@ -87,27 +87,7 @@ public class LessonController  implements LessonControllerDocs {
 		
 		return ResponseEntity.ok(response);
 	}
-	/*
-	@GetMapping(
-			produces = {
-				MediaType.APPLICATION_JSON_VALUE,
-				MediaType.APPLICATION_XML_VALUE,
-				MediaType.APPLICATION_YAML_VALUE
-				})
-	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll(HttpServletRequest httpRequest) {
-		logger.info(">>> Initializing the controller's findAll method.");
-		
-		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
-		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
-		String role = optUser.get().role();
-		
-		List<EntityModel<LessonResponseDTO>> responsesDTO = lessonService.findAll(role);
-		
-		logger.info(">>> Finishing the controller's findAll method.");
-		
-		return ResponseEntity.ok(responsesDTO);
-	}
-	*/
+	
 	@PutMapping(
 			value = "/{id}",
 			consumes = {

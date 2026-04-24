@@ -52,34 +52,6 @@ public interface LessonControllerDocs {
 	)
 	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id, HttpServletRequest httpRequest);
 	
-	/*
-	@Operation(
-			summary = "Find All Lesson.",
-			description = "Finds All Lesson.",
-			tags = {"Lesson"},
-			responses = {
-					@ApiResponse(
-							
-							responseCode = "200", 
-							content = {
-									@Content(
-											mediaType = MediaType.APPLICATION_JSON_VALUE,
-											array = @ArraySchema(schema = @Schema(implementation = LessonResponseDTO.class))),
-									@Content(mediaType = MediaType.APPLICATION_XML_VALUE),
-									@Content(mediaType = MediaType.APPLICATION_YAML_VALUE)
-							}
-							
-					),
-					@ApiResponse(responseCode = "204", content = @Content),
-					@ApiResponse(responseCode = "400", content = @Content),
-					@ApiResponse(responseCode = "401", content = @Content),
-					@ApiResponse(responseCode = "404", content = @Content),
-					@ApiResponse(responseCode = "500", content = @Content)
-			}
-			
-	)
-	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll(HttpServletRequest httpRequest);
-	*/
 	@Operation(
 			summary = "Update a Lesson.",
 			description = "Update a information from specific Lesson.",

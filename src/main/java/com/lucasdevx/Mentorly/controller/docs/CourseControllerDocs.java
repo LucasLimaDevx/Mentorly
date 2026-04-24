@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.controller.docs;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.lucasdevx.Mentorly.dto.request.CourseRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
+import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -81,6 +83,34 @@ public interface CourseControllerDocs {
 			
 	)
 	public ResponseEntity<List<EntityModel<CourseResponseDTO>> > findAll(HttpServletRequest httpRequest);
+	
+	@Operation(
+			summary = "Find All Lesson by Course Id.",
+			description = "Finds All Lesson by Course Id.",
+			tags = {"Course"},
+			responses = {
+					@ApiResponse(
+							
+							responseCode = "200", 
+							content = {
+									@Content(
+											mediaType = MediaType.APPLICATION_JSON_VALUE,
+											array = @ArraySchema(schema = @Schema(implementation = LessonResponseDTO.class))),
+									@Content(mediaType = MediaType.APPLICATION_XML_VALUE),
+									@Content(mediaType = MediaType.APPLICATION_YAML_VALUE)
+							}
+							
+					),
+					@ApiResponse(responseCode = "204", content = @Content),
+					@ApiResponse(responseCode = "400", content = @Content),
+					@ApiResponse(responseCode = "401", content = @Content),
+					@ApiResponse(responseCode = "404", content = @Content),
+					@ApiResponse(responseCode = "500", content = @Content)
+			}
+			
+	)
+	public ResponseEntity<Set<EntityModel<LessonResponseDTO>>> findAllLessonsByCourseId(@PathVariable Long id, HttpServletRequest httpRequest);
+	
 	
 	@Operation(
 			summary = "Update a Course.",
