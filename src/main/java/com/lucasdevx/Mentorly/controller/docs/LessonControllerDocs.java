@@ -1,9 +1,6 @@
 package com.lucasdevx.Mentorly.controller.docs;
 
-import java.util.List;
-
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +9,6 @@ import com.lucasdevx.Mentorly.dto.request.LessonRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -56,6 +52,7 @@ public interface LessonControllerDocs {
 	)
 	public ResponseEntity<EntityModel<LessonResponseDTO>> findById(@PathVariable Long id, HttpServletRequest httpRequest);
 	
+	/*
 	@Operation(
 			summary = "Find All Lesson.",
 			description = "Finds All Lesson.",
@@ -82,7 +79,7 @@ public interface LessonControllerDocs {
 			
 	)
 	public ResponseEntity<List<EntityModel<LessonResponseDTO>>> findAll(HttpServletRequest httpRequest);
-	
+	*/
 	@Operation(
 			summary = "Update a Lesson.",
 			description = "Update a information from specific Lesson.",

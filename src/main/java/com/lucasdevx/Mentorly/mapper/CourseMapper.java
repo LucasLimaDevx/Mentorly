@@ -1,9 +1,14 @@
 package com.lucasdevx.Mentorly.mapper;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Component;
 
+import com.lucasdevx.Mentorly.controller.CourseController;
 import com.lucasdevx.Mentorly.dto.request.CourseRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
 import com.lucasdevx.Mentorly.model.Course;
@@ -51,6 +56,31 @@ public class CourseMapper {
 		
 		logger.info(">>> The Course Entity conversion was successful.");
 		return response;
+		
+	}
+	
+	public EntityModel<CourseResponseDTO> addHateoasLinks(CourseResponseDTO courseDTO, String role) {
+		Long id = courseDTO.id();
+		logger.info(">>> Adding links HATEOAS.");
+		
+		if(role == null || role.equals("ADMIN")) {
+			EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
+				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
+				linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(null, null)).withRel("findAllLessonsByCourseId").withType("GET"),
+				linkTo(methodOn(CourseController.class).create(null)).withRel("create").withType("POST"),
+				linkTo(methodOn(CourseController.class).update(null, id)).withRel("update").withType("PUT"),
+				linkTo(methodOn(CourseController.class).delete(id)).withRel("delete").withType("DELETE"));
+			
+			logger.info(">>> The HATEOAS links have been successfully added.");
+			return model;
+		}
+		
+		EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
+				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"));
+		
+		return model;
 		
 	}
 }

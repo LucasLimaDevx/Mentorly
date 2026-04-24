@@ -2,6 +2,7 @@ package com.lucasdevx.Mentorly.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,9 @@ import com.lucasdevx.Mentorly.config.TokenConfig;
 import com.lucasdevx.Mentorly.controller.docs.CourseControllerDocs;
 import com.lucasdevx.Mentorly.dto.request.CourseRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
+import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
 import com.lucasdevx.Mentorly.service.CourseService;
+import com.lucasdevx.Mentorly.service.LessonService;
 import com.lucasdevx.Mentorly.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,13 +38,15 @@ import jakarta.servlet.http.HttpServletRequest;
 public class CourseController  implements CourseControllerDocs  {
 	
 	private CourseService courseService;
+	private LessonService lessonService;
 	private TokenConfig tokenConfig;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public CourseController(CourseService courseService, TokenConfig tokenConfig) {
+	public CourseController(CourseService courseService, LessonService lessonService, TokenConfig tokenConfig) {
 		this.courseService = courseService;
-		this.tokenConfig =tokenConfig;
+		this.tokenConfig = tokenConfig;
+		this.lessonService = lessonService;
 	}
 	
 	@PostMapping(
@@ -107,6 +112,33 @@ public class CourseController  implements CourseControllerDocs  {
 		
 		logger.info(">>> Finishing the controller's findById method.");
 		return ResponseEntity.ok(responsesDTO);
+	}
+	
+	
+	@GetMapping(
+			value = "/{id}/lessons",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
+	public ResponseEntity<Set<EntityModel<LessonResponseDTO>>> findAllLessonsByCourseId(@PathVariable Long id, HttpServletRequest httpRequest) { 
+		logger.info(">>> Initializing the controller's findAllLessonByCourseId method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		String role = optUser.get().role();
+		
+		if(id <= 0) {
+			throw new IllegalArgumentException("The ID provided is not valid.");
+		}
+		
+		Set<EntityModel<LessonResponseDTO>> response = lessonService.findAllLessonsByCourseId(id, role);
+		
+		logger.info(">>> Finishing the controller's findById method.");
+		return ResponseEntity.ok(response);
+		
+		
 	}
 	
 	@PutMapping(

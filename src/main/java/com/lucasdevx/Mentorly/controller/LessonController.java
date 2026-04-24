@@ -1,6 +1,5 @@
 package com.lucasdevx.Mentorly.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -88,7 +87,7 @@ public class LessonController  implements LessonControllerDocs {
 		
 		return ResponseEntity.ok(response);
 	}
-	
+	/*
 	@GetMapping(
 			produces = {
 				MediaType.APPLICATION_JSON_VALUE,
@@ -108,7 +107,7 @@ public class LessonController  implements LessonControllerDocs {
 		
 		return ResponseEntity.ok(responsesDTO);
 	}
-	
+	*/
 	@PutMapping(
 			value = "/{id}",
 			consumes = {

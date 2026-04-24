@@ -22,7 +22,7 @@ public class SecurityConfig {
 	public final SecurityFilter securityFilter;
 	
 	private static final String[] PUBLIC = {"/auth/v1/login", "/auth/v1/register"};
-	private static final String[] USER_GET_ENDPOINTS = {"/courses/**", "/lessons/**"};
+	private static final String[] USER_GET_ENDPOINTS = {"/courses/**", "/courses/*/lessons", "/lessons/**"};
 	
 	public SecurityConfig(SecurityFilter securityFilter) {
 		this.securityFilter = securityFilter;
