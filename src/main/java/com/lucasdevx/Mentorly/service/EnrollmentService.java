@@ -1,8 +1,5 @@
 package com.lucasdevx.Mentorly.service;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
-import com.lucasdevx.Mentorly.controller.EnrollmentController;
 import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
@@ -76,7 +72,7 @@ public class EnrollmentService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentPersisted);
-		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, role);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, role);
 		
 		logger.info(">>> Returning response.");
 		
@@ -94,7 +90,7 @@ public class EnrollmentService {
 		logger.info(">>> The entity was found.");
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentPersisted);
-		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, null);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -116,7 +112,7 @@ public class EnrollmentService {
 					.toList();
 			
 			List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentsDTO.stream()
-					.map((responseDTO) -> addHateoasLinks(responseDTO, null)).toList();
+					.map((responseDTO) -> enrollmentMapper.addHateoasLinks(responseDTO, null)).toList();
 				
 			logger.info(">>> Returning response.");
 			
@@ -129,7 +125,7 @@ public class EnrollmentService {
 				.toList();
 		
 		List<EntityModel<EnrollmentResponseDTO>> responsesDTO =  enrollmentsDTO.stream()
-				.map((enrollmentDTO) -> addHateoasLinks(enrollmentDTO, role))
+				.map((enrollmentDTO) -> enrollmentMapper.addHateoasLinks(enrollmentDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -148,7 +144,7 @@ public class EnrollmentService {
 		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request);
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
-		EntityModel<EnrollmentResponseDTO> response = addHateoasLinks(enrollmentDTO, null);
+		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, null);
 		
 		if(request.progressPercentage() == 100) {
 			addCertificate(enrollmentPersisted);
@@ -173,7 +169,12 @@ public class EnrollmentService {
 		logger.info(">>> Updating the data.");
 		
 		logger.info(">>> Updating progressPercentage.");
-		enrollment.setProgressPercentage(request.progressPercentage());
+		if(request.progressPercentage() > 100) {
+			enrollment.setProgressPercentage(100);
+		}
+		else {
+			enrollment.setProgressPercentage(request.progressPercentage());
+		}
 		
 		if(!enrollment.getCourse().getId().equals(request.courseId())) {
 			logger.info(">>> Searching for Course entity in database.");
@@ -201,29 +202,4 @@ public class EnrollmentService {
 		logger.info(">>> Certificate was added.");
 	}
 	
-	public EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO, String role) {
-		Long id = enrollmentDTO.id();
-		logger.info(">>> Adding links HATEOAS.");
-		
-		if(role == null) {
-			EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
-					linkTo(methodOn(EnrollmentController.class).findById(id)).withSelfRel().withType("GET"),
-					linkTo(methodOn(EnrollmentController.class).findAll()).withRel("findAll").withType("GET"),
-					linkTo(methodOn(EnrollmentController.class).update(null, id)).withRel("update").withType("PUT"),
-					linkTo(methodOn(EnrollmentController.class).delete(id)).withRel("delete").withType("DELETE"));
-			
-			logger.info(">>> The HATEOAS links have been successfully added.");
-			
-			return model;
-		}
-		
-		EntityModel<EnrollmentResponseDTO> model =  EntityModel.of(enrollmentDTO,
-				linkTo(methodOn(EnrollmentController.class).create(null, null)).withRel("create").withType("POST"),
-				linkTo(methodOn(EnrollmentController.class).findAllEnrollmentAuthStudent(null)).withRel("findAllEnrollmentAuthStudent").withType("GET"));
-		
-		logger.info(">>> The HATEOAS links have been successfully added.");
-		
-		return model;
-		
-	}
 }
