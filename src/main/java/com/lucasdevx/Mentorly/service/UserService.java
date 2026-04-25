@@ -1,8 +1,5 @@
 package com.lucasdevx.Mentorly.service;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +9,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lucasdevx.Mentorly.controller.UserController;
 import com.lucasdevx.Mentorly.dto.request.UserRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.UserResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
@@ -64,7 +60,7 @@ public class UserService {
 		User userPersisted = userRepository.save(user);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
-		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, role.toUpperCase());
+		EntityModel<UserResponseDTO> response = userMapper.addHateoasLinks(userDTO, role.toUpperCase());
 		
 		logger.info(">>> Returning response.");
 		
@@ -83,7 +79,7 @@ public class UserService {
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
 		
-		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, userDTO.role());
+		EntityModel<UserResponseDTO> response = userMapper.addHateoasLinks(userDTO, userDTO.role());
 		
 		logger.info(">>> Returning response.");
 		
@@ -104,7 +100,7 @@ public class UserService {
 				.toList();
 		
 		List<EntityModel<UserResponseDTO>> responsesDTO = usersDTO.stream()
-				.map((userDTO) -> addHateoasLinks(userDTO, userDTO.role()))
+				.map((userDTO) -> userMapper.addHateoasLinks(userDTO, userDTO.role()))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -123,7 +119,7 @@ public class UserService {
 		User userUpdated = updateData(userPersisted, request, role);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userRepository.save(userUpdated));
-		EntityModel<UserResponseDTO> response = addHateoasLinks(userDTO, userDTO.role());
+		EntityModel<UserResponseDTO> response = userMapper.addHateoasLinks(userDTO, userDTO.role());
 		
 		logger.info(">>> Returning response.");
 		
@@ -195,32 +191,4 @@ public class UserService {
 		return user;
 	}
 	
-	public EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO, String role) {
-		Long id = userDTO.id();
-		logger.info(">>> Adding links HATEOAS.");
-		
-		if(role.equals("ADMIN")) {
-			EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
-					linkTo(methodOn(UserController.class).findById(id)).withSelfRel().withType("GET"),
-					linkTo(methodOn(UserController.class).findAll()).withRel("findAll").withType("GET"),
-					linkTo(methodOn(UserController.class).create(null)).withRel("create").withType("POST"),
-					linkTo(methodOn(UserController.class).update(null, id)).withRel("update").withType("PUT"),
-					linkTo(methodOn(UserController.class).delete(id)).withRel("delete").withType("DELETE"));
-			
-			logger.info(">>> The HATEOAS links have been successfully added.");
-			
-			return model;
-		}
-		
-		EntityModel<UserResponseDTO> model =  EntityModel.of(userDTO,
-				linkTo(methodOn(UserController.class).findAuthStudent(null)).withSelfRel().withType("GET"),
-				linkTo(methodOn(UserController.class).updateAuthStudent(null, null)).withRel("updateAuthStudent").withType("PUT"),
-				linkTo(methodOn(UserController.class).deleteAuthStudent(null)).withRel("deleteAuthStudent").withType("DELETE"));
-		
-		logger.info(">>> The HATEOAS links have been successfully added.");
-		
-		return model;
-		
-		
-	}
 }
