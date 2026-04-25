@@ -1,8 +1,5 @@
 package com.lucasdevx.Mentorly.service;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
-import com.lucasdevx.Mentorly.controller.CategoryController;
 import com.lucasdevx.Mentorly.dto.request.CategoryRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CategoryResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
@@ -42,7 +38,7 @@ public class CategoryService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		CategoryResponseDTO categoryDTO = categoryMapper.converterToDto(categoryPersisted);
-		EntityModel<CategoryResponseDTO> response = addHateoasLinks(categoryDTO);
+		EntityModel<CategoryResponseDTO> response = categoryMapper.addHateoasLinks(categoryDTO);
 		
 		logger.info(">>> Returning response.");
 		
@@ -60,7 +56,7 @@ public class CategoryService {
 		
 		
 		CategoryResponseDTO categoryDTO = categoryMapper.converterToDto(categoryPersisted);
-		EntityModel<CategoryResponseDTO> response = addHateoasLinks(categoryDTO);
+		EntityModel<CategoryResponseDTO> response = categoryMapper.addHateoasLinks(categoryDTO);
 		
 		logger.info(">>> Returning response.");
 		
@@ -80,7 +76,7 @@ public class CategoryService {
 				.toList();
 		
 		List<EntityModel<CategoryResponseDTO>> responsesDTO = categoriesDTO.stream()
-				.map((categoryDTO) -> addHateoasLinks(categoryDTO))
+				.map((categoryDTO) -> categoryMapper.addHateoasLinks(categoryDTO))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -98,7 +94,7 @@ public class CategoryService {
 		Category categoryUpdated = updateData(categoryPersisted, request);
 		
 		CategoryResponseDTO categoryDTO = categoryMapper.converterToDto(categoryRepository.save(categoryUpdated));
-		EntityModel<CategoryResponseDTO> response = addHateoasLinks(categoryDTO);
+		EntityModel<CategoryResponseDTO> response = categoryMapper.addHateoasLinks(categoryDTO);
 		
 		logger.info(">>> Returning response.");
 		
@@ -129,19 +125,5 @@ public class CategoryService {
 		return category;
 	}
 	
-	public EntityModel<CategoryResponseDTO> addHateoasLinks(CategoryResponseDTO categoryDTO) {
-		Long id = categoryDTO.id();
-		logger.info(">>> Adding links HATEOAS.");
-		EntityModel<CategoryResponseDTO> model =  EntityModel.of(categoryDTO,
-				linkTo(methodOn(CategoryController.class).findById(id)).withSelfRel().withType("GET"),
-				linkTo(methodOn(CategoryController.class).findAll()).withRel("findAll").withType("GET"),
-				linkTo(methodOn(CategoryController.class).create(null)).withRel("create").withType("POST"),
-				linkTo(methodOn(CategoryController.class).update(null, id)).withRel("update").withType("PUT"),
-				linkTo(methodOn(CategoryController.class).delete(id)).withRel("delete").withType("DELETE"));
-		
-		logger.info(">>> The HATEOAS links have been successfully added.");
-		
-		return model;
-		
-	}
+	
 }

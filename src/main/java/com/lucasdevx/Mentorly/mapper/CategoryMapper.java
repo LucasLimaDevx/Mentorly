@@ -1,9 +1,14 @@
 package com.lucasdevx.Mentorly.mapper;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Component;
 
+import com.lucasdevx.Mentorly.controller.CategoryController;
 import com.lucasdevx.Mentorly.dto.request.CategoryRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CategoryResponseDTO;
 import com.lucasdevx.Mentorly.model.Category;
@@ -40,6 +45,22 @@ public class CategoryMapper {
 		logger.info(">>> The Category Entity conversion was successful.");
 		
 		return response;
+	}
+	
+	public EntityModel<CategoryResponseDTO> addHateoasLinks(CategoryResponseDTO categoryDTO) {
+		Long id = categoryDTO.id();
+		logger.info(">>> Adding links HATEOAS.");
+		EntityModel<CategoryResponseDTO> model =  EntityModel.of(categoryDTO,
+				linkTo(methodOn(CategoryController.class).findById(id)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CategoryController.class).findAll()).withRel("findAll").withType("GET"),
+				linkTo(methodOn(CategoryController.class).create(null)).withRel("create").withType("POST"),
+				linkTo(methodOn(CategoryController.class).update(null, id)).withRel("update").withType("PUT"),
+				linkTo(methodOn(CategoryController.class).delete(id)).withRel("delete").withType("DELETE"));
+		
+		logger.info(">>> The HATEOAS links have been successfully added.");
+		
+		return model;
+		
 	}
 
 }
