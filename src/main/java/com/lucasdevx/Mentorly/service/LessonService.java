@@ -1,8 +1,5 @@
 package com.lucasdevx.Mentorly.service;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
-import com.lucasdevx.Mentorly.controller.CourseController;
 import com.lucasdevx.Mentorly.dto.request.LessonRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
@@ -96,30 +92,7 @@ public class LessonService {
 		
 		Set<EntityModel<LessonResponseDTO>> responses = lessonsDTO
 				.stream()
-				.map((lessonDTO) -> {
-					
-					logger.info(">>> Adding links HATEOAS.");
-					
-					if(role == null || role.equals("ADMIN")) {
-						EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
-							linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
-							linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
-							linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(null, null)).withRel("findAllLessonsByCourseId").withType("GET"),
-							linkTo(methodOn(CourseController.class).create(null)).withRel("create").withType("POST"),
-							linkTo(methodOn(CourseController.class).update(null, id)).withRel("update").withType("PUT"),
-							linkTo(methodOn(CourseController.class).delete(id)).withRel("delete").withType("DELETE"));
-						
-						logger.info(">>> The HATEOAS links have been successfully added.");
-						return model;
-					}
-					
-					EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
-							linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
-							linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
-							linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(null, null)).withRel("findAllLessonsByCourseId").withType("GET"));
-					
-					return model;
-				})
+				.map((lessonDTO) -> lessonMapper.addHateoasLinks(id, lessonDTO, role))
 				.collect(Collectors.toSet());
 		
 		return responses;

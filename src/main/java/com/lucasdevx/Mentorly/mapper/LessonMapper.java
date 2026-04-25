@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Component;
 
+import com.lucasdevx.Mentorly.controller.CourseController;
 import com.lucasdevx.Mentorly.controller.LessonController;
 import com.lucasdevx.Mentorly.dto.request.LessonRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.LessonResponseDTO;
@@ -78,4 +79,29 @@ public class LessonMapper {
 		
 		return model;
 	}
+	
+	public EntityModel<LessonResponseDTO> addHateoasLinks(Long courseId, LessonResponseDTO lessonDTO, String role){
+		logger.info(">>> Adding links HATEOAS.");
+		
+		if(role == null || role.equals("ADMIN")) {
+			EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
+				linkTo(methodOn(CourseController.class).findById(courseId, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
+				linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(courseId, null)).withRel("findAllLessonsByCourseId").withType("GET"),
+				linkTo(methodOn(CourseController.class).create(null)).withRel("create").withType("POST"),
+				linkTo(methodOn(CourseController.class).update(null, courseId)).withRel("update").withType("PUT"),
+				linkTo(methodOn(CourseController.class).delete(courseId)).withRel("delete").withType("DELETE"));
+			
+			logger.info(">>> The HATEOAS links have been successfully added.");
+			return model;
+		}
+		
+		EntityModel<LessonResponseDTO> model =  EntityModel.of(lessonDTO,
+				linkTo(methodOn(CourseController.class).findById(courseId, null)).withSelfRel().withType("GET"),
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
+				linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(courseId, null)).withRel("findAllLessonsByCourseId").withType("GET"));
+		
+		return model;
+	}
+
 }

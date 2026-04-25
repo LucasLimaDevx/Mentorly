@@ -142,7 +142,7 @@ public class CourseService {
 		course.setWorkloadHours(request.workloadHours());
 		
 		logger.debug(">>> Setting course level.");
-		course.setLevel(Level.valueOf(request.courseLevel()));
+		course.setLevel(Level.valueOf(request.courseLevel().toUpperCase()));
 		
 		logger.debug(">>> Checking if the active property is null.");
 		if(request.active() != null) {

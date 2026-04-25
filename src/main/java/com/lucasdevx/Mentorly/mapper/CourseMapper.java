@@ -67,7 +67,7 @@ public class CourseMapper {
 			EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
 				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
 				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
-				linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(null, null)).withRel("findAllLessonsByCourseId").withType("GET"),
+				linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(id, null)).withRel("findAllLessonsByCourseId").withType("GET"),
 				linkTo(methodOn(CourseController.class).create(null)).withRel("create").withType("POST"),
 				linkTo(methodOn(CourseController.class).update(null, id)).withRel("update").withType("PUT"),
 				linkTo(methodOn(CourseController.class).delete(id)).withRel("delete").withType("DELETE"));
@@ -78,7 +78,8 @@ public class CourseMapper {
 		
 		EntityModel<CourseResponseDTO> model =  EntityModel.of(courseDTO,
 				linkTo(methodOn(CourseController.class).findById(id, null)).withSelfRel().withType("GET"),
-				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"));
+				linkTo(methodOn(CourseController.class).findAll(null)).withRel("findAll").withType("GET"),
+				linkTo(methodOn(CourseController.class).findAllLessonsByCourseId(id, null)).withRel("findAllLessonsByCourseId").withType("GET"));
 		
 		return model;
 		
