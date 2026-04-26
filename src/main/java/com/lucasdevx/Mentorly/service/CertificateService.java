@@ -1,8 +1,5 @@
 package com.lucasdevx.Mentorly.service;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
-import com.lucasdevx.Mentorly.controller.CertificateController;
 import com.lucasdevx.Mentorly.dto.response.CertificateResponseDTO;
 import com.lucasdevx.Mentorly.exception.ObjectNotFoundException;
 import com.lucasdevx.Mentorly.mapper.CertificateMapper;
@@ -42,7 +38,7 @@ public class CertificateService {
 		logger.info(">>> The entity was found.");
 		
 		CertificateResponseDTO certificateDTO = certificateMapper.converterToDto(certificatePersisted);
-		EntityModel<CertificateResponseDTO> response = addHateoasLinks(certificateDTO);
+		EntityModel<CertificateResponseDTO> response = certificateMapper.addHateoasLinks(certificateDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -50,7 +46,7 @@ public class CertificateService {
 	}
 	
 	@Transactional
-	public List<EntityModel<CertificateResponseDTO>> findAll() {
+	public List<EntityModel<CertificateResponseDTO>> findAll(Long id, String role) {
 		logger.info(">>> Initializing the service's findAll method.");
 		logger.info(">>> Searching for entities in the database.");
 		
@@ -58,16 +54,33 @@ public class CertificateService {
 		
 		logger.info(">>> The entities have been discovered.");
 		
+		if(role == null) {
+			
+			List<CertificateResponseDTO> certificatesDTO = certificatesPersisted.stream()
+					.map((response) -> certificateMapper.converterToDto(response))
+					.toList();
+			
+			List<EntityModel<CertificateResponseDTO>> responsesDTO = certificatesDTO.stream()
+					.map((certificateDTO) -> certificateMapper.addHateoasLinks(certificateDTO, null))
+					.toList();
+			
+			logger.info(">>> Returning response.");
+			return responsesDTO;
+		}
+		
 		List<CertificateResponseDTO> certificatesDTO = certificatesPersisted.stream()
+				.filter((certificate) -> certificate.getUser().getId().equals(id))
 				.map((response) -> certificateMapper.converterToDto(response))
 				.toList();
 		
 		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificatesDTO.stream()
-				.map((certificateDTO) -> addHateoasLinks(certificateDTO))
+				.map((certificateDTO) -> certificateMapper.addHateoasLinks(certificateDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
 		return responsesDTO;
+		
+		
 	}	
 	
 	public void delete(Long id) {
@@ -79,19 +92,6 @@ public class CertificateService {
 		
 		logger.info(">>> Deleting Entity by ID");
 		certificateRepository.deleteById(id);
-	}
-	
-	public EntityModel<CertificateResponseDTO> addHateoasLinks(CertificateResponseDTO certificateDTO) {
-		Long id = certificateDTO.id();
-		logger.info(">>> Adding links HATEOAS.");
-		EntityModel<CertificateResponseDTO> model =  EntityModel.of(certificateDTO,
-				linkTo(methodOn(CertificateController.class).findById(id)).withSelfRel().withType("GET"),
-				linkTo(methodOn(CertificateController.class).findAll()).withRel("findAll").withType("GET"),
-				linkTo(methodOn(CertificateController.class).delete(id)).withRel("delete").withType("DELETE"));
-		
-		logger.info(">>> The HATEOAS links have been successfully added.");
-		
-		return model;
-		
-	}
+	}	
+
 }

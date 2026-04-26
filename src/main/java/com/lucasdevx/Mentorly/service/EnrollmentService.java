@@ -146,7 +146,7 @@ public class EnrollmentService {
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
 		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, null);
 		
-		if(request.progressPercentage() == 100) {
+		if(request.progressPercentage() >= 100) {
 			addCertificate(enrollmentPersisted);
 		}
 		
@@ -189,7 +189,7 @@ public class EnrollmentService {
 		
 		return enrollment;
 	}
-	
+
 	public void addCertificate(Enrollment enrollmentPersisted) {
 		logger.info(">>> Adding Certificate.");
 		
@@ -197,6 +197,8 @@ public class EnrollmentService {
 				.orElseThrow(()-> new ObjectNotFoundException("Object Course not found."));
 		
 		Certificate certificate = new Certificate(null, new Date(), coursePersisted, enrollmentPersisted.getUser());
+		
+		certificate.setCourse(coursePersisted);
 		certificateRepository.save(certificate);
 		
 		logger.info(">>> Certificate was added.");

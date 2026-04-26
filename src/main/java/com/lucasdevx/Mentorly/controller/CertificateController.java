@@ -1,6 +1,7 @@
 package com.lucasdevx.Mentorly.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucasdevx.Mentorly.config.JWTUserData;
+import com.lucasdevx.Mentorly.config.TokenConfig;
 import com.lucasdevx.Mentorly.controller.docs.CertificateControllerDocs;
 import com.lucasdevx.Mentorly.dto.response.CertificateResponseDTO;
 import com.lucasdevx.Mentorly.service.CertificateService;
 import com.lucasdevx.Mentorly.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/certificates/v1")
@@ -26,10 +30,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class CertificateController  implements CertificateControllerDocs  {
 	
 	private CertificateService certificateService;
+	private TokenConfig tokenConfig;
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 	
-	public CertificateController(CertificateService certificateService) {
+	public CertificateController(CertificateService certificateService, TokenConfig tokenConfig) {
 		this.certificateService = certificateService;
+		this.tokenConfig = tokenConfig;
 	}
 	
 	
@@ -63,7 +69,30 @@ public class CertificateController  implements CertificateControllerDocs  {
 	public ResponseEntity<List<EntityModel<CertificateResponseDTO>>> findAll() {
 		logger.info(">>> Initializing the controller's findAll method.");
 		
-		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificateService.findAll();
+		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificateService.findAll(null, null);
+		
+		logger.info(">>> Finishing the controller's findAll method.");
+		
+		return ResponseEntity.ok(responsesDTO);
+	}
+	
+	@GetMapping(
+			value = "/me",
+			produces = {
+				MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE,
+				MediaType.APPLICATION_YAML_VALUE
+				})
+	public ResponseEntity<List<EntityModel<CertificateResponseDTO>>> findAllCertificatesAuthStudent(HttpServletRequest httpRequest) {
+		logger.info(">>> Initializing the controller's findAll method.");
+		
+		String token = httpRequest.getHeader("Authorization").replace("Bearer ", "");
+		Optional<JWTUserData> optUser = tokenConfig.validateToken(token);
+		
+		Long id = optUser.get().userId();
+		String role = optUser.get().role();
+		
+		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificateService.findAll(id, role);
 		
 		logger.info(">>> Finishing the controller's findAll method.");
 		
