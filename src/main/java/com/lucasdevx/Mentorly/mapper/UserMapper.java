@@ -88,7 +88,7 @@ public class UserMapper {
 		return response;
 	}
 	
-	public EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO, String role) {
+	public static EntityModel<UserResponseDTO> addHateoasLinks(UserResponseDTO userDTO, String role) {
 		Long id = userDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		

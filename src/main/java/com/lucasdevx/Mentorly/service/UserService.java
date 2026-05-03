@@ -60,7 +60,7 @@ public class UserService {
 		User userPersisted = userRepository.save(user);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
-		EntityModel<UserResponseDTO> response = userMapper.addHateoasLinks(userDTO, role.toUpperCase());
+		EntityModel<UserResponseDTO> response = UserMapper.addHateoasLinks(userDTO, role.toUpperCase());
 		
 		logger.info(">>> Returning response.");
 		
@@ -79,7 +79,7 @@ public class UserService {
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
 		
-		EntityModel<UserResponseDTO> response = userMapper.addHateoasLinks(userDTO, userDTO.role());
+		EntityModel<UserResponseDTO> response = UserMapper.addHateoasLinks(userDTO, userDTO.role());
 		
 		logger.info(">>> Returning response.");
 		
@@ -100,7 +100,7 @@ public class UserService {
 				.toList();
 		
 		List<EntityModel<UserResponseDTO>> responsesDTO = usersDTO.stream()
-				.map((userDTO) -> userMapper.addHateoasLinks(userDTO, userDTO.role()))
+				.map((userDTO) -> UserMapper.addHateoasLinks(userDTO, userDTO.role()))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -119,7 +119,7 @@ public class UserService {
 		User userUpdated = updateData(userPersisted, request, role);
 		
 		UserResponseDTO userDTO = userMapper.converterToDto(userRepository.save(userUpdated));
-		EntityModel<UserResponseDTO> response = userMapper.addHateoasLinks(userDTO, userDTO.role());
+		EntityModel<UserResponseDTO> response = UserMapper.addHateoasLinks(userDTO, userDTO.role());
 		
 		logger.info(">>> Returning response.");
 		
