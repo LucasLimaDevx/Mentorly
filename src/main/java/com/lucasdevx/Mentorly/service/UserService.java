@@ -59,6 +59,7 @@ public class UserService {
 		logger.info(">>> Saving entity to database.");
 		User userPersisted = userRepository.save(user);
 		
+		
 		UserResponseDTO userDTO = userMapper.converterToDto(userPersisted);
 		EntityModel<UserResponseDTO> response = UserMapper.addHateoasLinks(userDTO, role.toUpperCase());
 		

@@ -88,8 +88,8 @@ public class MockUser {
 						number.longValue(),
 						"First Name Test" + number,
 						"Last Name Test" + number,
-						(number % 2) == 0 ? "USER" : "ADMIN",
 						"emailtest" + number + "@gmail.com",
+						(number % 2) == 0 ? "USER" : "ADMIN",
 						(number % 2) == 0 ? true : false,
 						formatter.parse("12/07/2026 10:00"),
 						formatter.parse("12/07/2026 10:00"));
