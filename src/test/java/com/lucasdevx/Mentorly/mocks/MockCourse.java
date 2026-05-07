@@ -65,7 +65,7 @@ public class MockCourse {
 		course.setTitle("Title Test" + number);
 		course.setWorkloadHours(30);	
 		course.setActive((number % 2 == 0) ? true : false);
-		course.setCreated(formatter.parse("09/05/2026 14:29"));
+		course.setCreated(formatter.parse("12/07/2026 10:00"));
 		course.setCategory(category);
 		
 		
@@ -106,7 +106,7 @@ public class MockCourse {
 		return new CourseResponseDTO(
 						number.longValue(),
 						"Title Test" + number,
-						formatter.parse("09/05/2026 14:29"),
+						formatter.parse("12/07/2026 10:00"),
 						30,
 						(number % 2) == 0 ? true : false,
 						level,

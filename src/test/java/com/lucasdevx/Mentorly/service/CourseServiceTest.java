@@ -53,6 +53,7 @@ class CourseServiceTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		courseService = new CourseService(courseRepository, categoryRepository, courseMapper);
+		formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		input = new MockCourse();
 	}
 
@@ -78,6 +79,7 @@ class CourseServiceTest {
 		assertEquals("Title Test1", result.getContent().title());
 		assertEquals(30, result.getContent().workloadHours());
 		assertEquals(false, result.getContent().active());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().created()));
 		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
 				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
 				   "ADVANCED".equals(result.getContent().courseLevel()));
@@ -100,6 +102,7 @@ class CourseServiceTest {
 		assertEquals("Title Test1", result.getContent().title());
 		assertEquals(30, result.getContent().workloadHours());
 		assertEquals(false, result.getContent().active());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().created()));
 		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
 				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
 				   "ADVANCED".equals(result.getContent().courseLevel()));
@@ -122,6 +125,7 @@ class CourseServiceTest {
 		assertEquals("Title Test1", result.getContent().title());
 		assertEquals(30, result.getContent().workloadHours());
 		assertEquals(false, result.getContent().active());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().created()));
 		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
 				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
 				   "ADVANCED".equals(result.getContent().courseLevel()));
@@ -151,6 +155,7 @@ class CourseServiceTest {
 		assertEquals("Title Test1", courseOne.title());
 		assertEquals(30, courseOne.workloadHours());
 		assertEquals(false, courseOne.active());
+		assertEquals("12/07/2026 10:00", formatter.format(courseOne.created()));
 		assertTrue("BEGINNER".equals(courseOne.courseLevel()) ||
 				   "INTERMEDIATE".equals(courseOne.courseLevel()) ||
 				   "ADVANCED".equals(courseOne.courseLevel()));
@@ -164,6 +169,7 @@ class CourseServiceTest {
 		assertEquals("Title Test8", courseEight.title());
 		assertEquals(30, courseEight.workloadHours());
 		assertEquals(true, courseEight.active());
+		assertEquals("12/07/2026 10:00", formatter.format(courseEight.created()));
 		assertTrue("BEGINNER".equals(courseEight.courseLevel()) ||
 				   "INTERMEDIATE".equals(courseEight.courseLevel()) ||
 				   "ADVANCED".equals(courseEight.courseLevel()));
@@ -192,6 +198,7 @@ class CourseServiceTest {
 		assertEquals("Title Test1", courseOne.title());
 		assertEquals(30, courseOne.workloadHours());
 		assertEquals(false, courseOne.active());
+		assertEquals("12/07/2026 10:00", formatter.format(courseOne.created()));
 		assertTrue("BEGINNER".equals(courseOne.courseLevel()) ||
 				   "INTERMEDIATE".equals(courseOne.courseLevel()) ||
 				   "ADVANCED".equals(courseOne.courseLevel()));
@@ -204,6 +211,7 @@ class CourseServiceTest {
 		assertEquals("Title Test8", courseEight.title());
 		assertEquals(30, courseEight.workloadHours());
 		assertEquals(true, courseEight.active());
+		assertEquals("12/07/2026 10:00", formatter.format(courseEight.created()));
 		assertTrue("BEGINNER".equals(courseEight.courseLevel()) ||
 				   "INTERMEDIATE".equals(courseEight.courseLevel()) ||
 				   "ADVANCED".equals(courseEight.courseLevel()));
@@ -228,6 +236,7 @@ class CourseServiceTest {
 		assertEquals("Title Test1", result.getContent().title());
 		assertEquals(30, result.getContent().workloadHours());
 		assertEquals(false, result.getContent().active());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().created()));
 		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
 				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
 				   "ADVANCED".equals(result.getContent().courseLevel()));
