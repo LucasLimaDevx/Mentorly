@@ -169,7 +169,7 @@ class UserServiceTest {
 		
 		assertNotNull(result);
 		assertEquals(14, result.size());
-		System.out.println(result);
+
 		UserResponseDTO userOne = result.get(1).getContent();
 		
 		System.out.println(result);
@@ -198,7 +198,50 @@ class UserServiceTest {
 	}
 
 	@Test
-	void update() {
+	void updateWithUserRole() throws ParseException {
+		UserRequestDTO request = input.mockRequestDTO(2);
+		User userPersisted = input.mockEntity(2);
+		UserResponseDTO response = input.mockResponseDTO(2);
+		
+		when(userRepository.findById(2L)).thenReturn(Optional.of(userPersisted));
+		when(userMapper.converterToDto(userRepository.save(any(User.class)))).thenReturn(response);
+		
+		var result = userService.update(request, 2L, request.role());
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().id());
+		assertEquals(2L, result.getContent().id());
+		assertEquals("First Name Test2", result.getContent().firstName());
+		assertEquals("Last Name Test2", result.getContent().lastName());
+		assertEquals("emailtest2@gmail.com", result.getContent().email());
+		assertEquals("USER", result.getContent().role());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().createdAt()));
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().uptedAt()));
+		
+		
+	}
+	
+	@Test
+	void updateWithAdminRole() throws ParseException {
+		UserRequestDTO request = input.mockRequestDTO(1);
+		User userPersisted = input.mockEntity(1);
+		UserResponseDTO response = input.mockResponseDTO(1);
+		
+		when(userRepository.findById(1L)).thenReturn(Optional.of(userPersisted));
+		when(userMapper.converterToDto(userRepository.save(any(User.class)))).thenReturn(response);
+		
+		var result = userService.update(request, 1L, request.role());
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().id());
+		assertEquals(1L, result.getContent().id());
+		assertEquals("First Name Test1", result.getContent().firstName());
+		assertEquals("Last Name Test1", result.getContent().lastName());
+		assertEquals("emailtest1@gmail.com", result.getContent().email());
+		assertEquals("ADMIN", result.getContent().role());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().createdAt()));
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().uptedAt()));
+		
 		
 	}
 
