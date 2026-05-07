@@ -53,7 +53,8 @@ public class MockCourse {
 	}
 	
 	public Course mockEntity(Integer number) throws ParseException {
-		Category category = new Category();
+		MockCategory mock = new MockCategory();
+		Category category = mock.mockEntity(number);
 		Course course = new Course();
 		Random random = new Random(3);
 		
@@ -85,6 +86,7 @@ public class MockCourse {
 	}
 	
 	public CourseResponseDTO mockResponseDTO(Integer number) throws ParseException {
+		MockCategory mock = new MockCategory();
 		Random random = new Random(3);		
 		String level = null;
 		
@@ -100,8 +102,7 @@ public class MockCourse {
 			level = "ADVANCED";
 		}
 		
-		CategoryResponseDTO categoryDTO = new CategoryResponseDTO(
-					number.longValue(), "Title Test" + number, "Description Test"+number);
+		CategoryResponseDTO categoryDTO = mock.mockResponseDTO(number);
 		
 		return new CourseResponseDTO(
 						number.longValue(),
