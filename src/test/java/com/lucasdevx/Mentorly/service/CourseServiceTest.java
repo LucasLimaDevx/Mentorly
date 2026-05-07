@@ -9,7 +9,9 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,7 +126,84 @@ class CourseServiceTest {
 	}
 	
 	@Test
-	void testFindAll() {
+	void findAllWithUserRole() throws ParseException {
+		List<Course> courses = input.mockEntityList();
+		List<CourseResponseDTO> coursesDTO = input.mockResponseDTOList();
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(courseRepository.findAll()).thenReturn(courses);
+		when(courseMapper.converterToDto(any(Course.class)))
+			.thenAnswer(invocation -> coursesDTO.get(index.getAndIncrement()));
+		
+		var result = courseService.findAll("USER");
+		
+		assertNotNull(result);
+		
+		CourseResponseDTO courseOne = result.get(1).getContent();
+		
+		assertNotNull(courseOne);
+		assertNotNull(courseOne.category());
+		assertEquals(1L, courseOne.id());
+		assertEquals("Title Test1", courseOne.title());
+		assertEquals(30, courseOne.workloadHours());
+		assertEquals(false, courseOne.active());
+		assertTrue("BEGINNER".equals(courseOne.courseLevel()) ||
+				   "INTERMEDIATE".equals(courseOne.courseLevel()) ||
+				   "ADVANCED".equals(courseOne.courseLevel()));
+		
+		
+		CourseResponseDTO courseEight = result.get(8).getContent();
+		
+		assertNotNull(courseEight);
+		assertNotNull(courseEight.category());
+		assertEquals(8L, courseEight.id());
+		assertEquals("Title Test8", courseEight.title());
+		assertEquals(30, courseEight.workloadHours());
+		assertEquals(true, courseEight.active());
+		assertTrue("BEGINNER".equals(courseEight.courseLevel()) ||
+				   "INTERMEDIATE".equals(courseEight.courseLevel()) ||
+				   "ADVANCED".equals(courseEight.courseLevel()));
+	}
+	
+	@Test
+	void findAllWithAdminRole() throws ParseException {
+		List<Course> courses = input.mockEntityList();
+		List<CourseResponseDTO> coursesDTO = input.mockResponseDTOList();
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(courseRepository.findAll()).thenReturn(courses);
+		when(courseMapper.converterToDto(any(Course.class)))
+			.thenAnswer(invocation -> coursesDTO.get(index.getAndIncrement()));
+		
+		var result = courseService.findAll("ADMIN");
+		
+		assertNotNull(result);
+		
+		CourseResponseDTO courseOne = result.get(1).getContent();
+		
+		assertNotNull(courseOne);
+		assertNotNull(courseOne.category());
+		assertEquals(1L, courseOne.id());
+		assertEquals("Title Test1", courseOne.title());
+		assertEquals(30, courseOne.workloadHours());
+		assertEquals(false, courseOne.active());
+		assertTrue("BEGINNER".equals(courseOne.courseLevel()) ||
+				   "INTERMEDIATE".equals(courseOne.courseLevel()) ||
+				   "ADVANCED".equals(courseOne.courseLevel()));
+		
+		CourseResponseDTO courseEight = result.get(8).getContent();
+		
+		assertNotNull(courseEight);
+		assertNotNull(courseEight.category());
+		assertEquals(8L, courseEight.id());
+		assertEquals("Title Test8", courseEight.title());
+		assertEquals(30, courseEight.workloadHours());
+		assertEquals(true, courseEight.active());
+		assertTrue("BEGINNER".equals(courseEight.courseLevel()) ||
+				   "INTERMEDIATE".equals(courseEight.courseLevel()) ||
+				   "ADVANCED".equals(courseEight.courseLevel()));
 	}
 
 	@Test
@@ -137,9 +216,5 @@ class CourseServiceTest {
 		
 	}
 
-	@Test
-	void testUpdateData() {
-		
-	}
 
 }

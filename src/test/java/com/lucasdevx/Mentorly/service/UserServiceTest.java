@@ -159,7 +159,7 @@ class UserServiceTest {
 	}
 
 	@Test
-	void findALl() throws ParseException {
+	void findAll() throws ParseException {
 		List<User> usersPersisted = input.mockEntityList();
 		List<UserResponseDTO> usersDTO = input.mockResponseDTOList();
 		
