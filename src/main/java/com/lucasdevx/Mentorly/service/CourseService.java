@@ -58,7 +58,7 @@ public class CourseService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
-		EntityModel<CourseResponseDTO> response = courseMapper.addHateoasLinks(courseDTO, null);
+		EntityModel<CourseResponseDTO> response = CourseMapper.addHateoasLinks(courseDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -75,7 +75,7 @@ public class CourseService {
 		logger.info(">>> The entity was found.");
 		
 		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
-		EntityModel<CourseResponseDTO> response = courseMapper.addHateoasLinks(courseDTO, role);
+		EntityModel<CourseResponseDTO> response = CourseMapper.addHateoasLinks(courseDTO, role);
 		
 		logger.info(">>> Returning response.");
 		
@@ -95,7 +95,7 @@ public class CourseService {
 				.toList();
 		
 		List<EntityModel<CourseResponseDTO>> responsesDTO = coursesDTO.stream()
-				.map((courseDTO) -> courseMapper.addHateoasLinks(courseDTO, role))
+				.map((courseDTO) -> CourseMapper.addHateoasLinks(courseDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -115,7 +115,7 @@ public class CourseService {
 		coursePersisted = courseRepository.save(courseUpdated);
 		
 		CourseResponseDTO courseDTO = courseMapper.converterToDto(coursePersisted);
-		EntityModel<CourseResponseDTO> response = courseMapper.addHateoasLinks(courseDTO, null);
+		EntityModel<CourseResponseDTO> response = CourseMapper.addHateoasLinks(courseDTO, null);
 		
 		logger.info(">>> Returning response.");
 		

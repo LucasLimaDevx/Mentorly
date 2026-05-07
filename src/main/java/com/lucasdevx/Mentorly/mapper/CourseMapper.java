@@ -59,7 +59,7 @@ public class CourseMapper {
 		
 	}
 	
-	public EntityModel<CourseResponseDTO> addHateoasLinks(CourseResponseDTO courseDTO, String role) {
+	public static EntityModel<CourseResponseDTO> addHateoasLinks(CourseResponseDTO courseDTO, String role) {
 		Long id = courseDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		
