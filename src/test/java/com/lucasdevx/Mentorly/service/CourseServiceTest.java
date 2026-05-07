@@ -207,7 +207,28 @@ class CourseServiceTest {
 	}
 
 	@Test
-	void testUpdate() {
+	void update() throws ParseException {
+		CourseRequestDTO request = input.mockRequestDTO(1);
+		Course coursePersisted = input.mockEntity(1);
+		Course courseUpdated = coursePersisted;
+		CourseResponseDTO response = input.mockResponseDTO(1);
+		
+		when(courseRepository.findById(anyLong())).thenReturn(Optional.of(coursePersisted));
+		when(courseRepository.save(any(Course.class))).thenReturn(courseUpdated);
+		when(courseMapper.converterToDto(any(Course.class))).thenReturn(response);
+		
+		var result = courseService.update(request, 1L);
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().category());
+		assertEquals(1L, result.getContent().id());
+		assertEquals("Title Test1", result.getContent().title());
+		assertEquals(30, result.getContent().workloadHours());
+		assertEquals(false, result.getContent().active());
+		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
+				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
+				   "ADVANCED".equals(result.getContent().courseLevel()));
+		
 		
 	}
 
