@@ -80,10 +80,49 @@ class CourseServiceTest {
 	}
 
 	@Test
-	void testFindById() {
+	void findByIdWithUserRole() throws ParseException {
+		Course coursePersisted = input.mockEntity(1);
+		CourseResponseDTO courseDTO = input.mockResponseDTO(1);
 		
-	}
+		when(courseRepository.findById(anyLong())).thenReturn(Optional.of(coursePersisted));
+		when(courseMapper.converterToDto(any(Course.class))).thenReturn(courseDTO);
+		
+		var result = courseService.findById(coursePersisted.getId(), "USER");
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().category());
+		assertEquals(1L, result.getContent().id());
+		assertEquals("Title Test1", result.getContent().title());
+		assertEquals(30, result.getContent().workloadHours());
+		assertEquals(false, result.getContent().active());
+		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
+				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
+				   "ADVANCED".equals(result.getContent().courseLevel()));
 
+	}
+	
+	@Test
+	void findByIdWithUserAdmin() throws ParseException {
+		Course coursePersisted = input.mockEntity(1);
+		CourseResponseDTO courseDTO = input.mockResponseDTO(1);
+		
+		when(courseRepository.findById(anyLong())).thenReturn(Optional.of(coursePersisted));
+		when(courseMapper.converterToDto(any(Course.class))).thenReturn(courseDTO);
+		
+		var result = courseService.findById(coursePersisted.getId(), "ADMIN");
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().category());
+		assertEquals(1L, result.getContent().id());
+		assertEquals("Title Test1", result.getContent().title());
+		assertEquals(30, result.getContent().workloadHours());
+		assertEquals(false, result.getContent().active());
+		assertTrue("BEGINNER".equals(result.getContent().courseLevel()) ||
+				   "INTERMEDIATE".equals(result.getContent().courseLevel()) ||
+				   "ADVANCED".equals(result.getContent().courseLevel()));
+
+	}
+	
 	@Test
 	void testFindAll() {
 	}
