@@ -7,7 +7,9 @@ import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -153,8 +155,46 @@ class UserServiceTest {
 	}
 
 	@Test
-	void findAll() {
-	
+	void findALl() throws ParseException {
+		List<User> usersPersisted = input.mockEntityList();
+		List<UserResponseDTO> usersDTO = input.mockResponseDTOList();
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(userRepository.findAll()).thenReturn(usersPersisted);
+		when(userMapper.converterToDto(any(User.class)))
+			.thenAnswer(invocation -> usersDTO.get(index.getAndIncrement()));
+		
+		var result = userService.findAll();
+		
+		assertNotNull(result);
+		assertEquals(14, result.size());
+		System.out.println(result);
+		UserResponseDTO userOne = result.get(1).getContent();
+		
+		System.out.println(result);
+		assertNotNull(userOne);
+		assertNotNull(userOne.id());
+		assertEquals(1L, userOne.id());
+		assertEquals("First Name Test1", userOne.firstName());
+		assertEquals("Last Name Test1", userOne.lastName());
+		assertEquals("emailtest1@gmail.com", userOne.email());
+		assertEquals("ADMIN", userOne.role());
+		assertEquals("12/07/2026 10:00", formatter.format(userOne.createdAt()));
+		assertEquals("12/07/2026 10:00", formatter.format(userOne.uptedAt()));
+		
+		UserResponseDTO userTwo = result.get(2).getContent();
+		
+		assertNotNull(userTwo);
+		assertNotNull(userTwo.id());
+		assertEquals(2L, userTwo.id());
+		assertEquals("First Name Test2", userTwo.firstName());
+		assertEquals("Last Name Test2", userTwo.lastName());
+		assertEquals("emailtest2@gmail.com", userTwo.email());
+		assertEquals("USER", userTwo.role());
+		assertEquals("12/07/2026 10:00", formatter.format(userTwo.createdAt()));
+		assertEquals("12/07/2026 10:00", formatter.format(userTwo.uptedAt()));
+		
 	}
 
 	@Test
