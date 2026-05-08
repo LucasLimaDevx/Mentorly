@@ -38,7 +38,7 @@ public class CategoryService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		CategoryResponseDTO categoryDTO = categoryMapper.converterToDto(categoryPersisted);
-		EntityModel<CategoryResponseDTO> response = categoryMapper.addHateoasLinks(categoryDTO);
+		EntityModel<CategoryResponseDTO> response = CategoryMapper.addHateoasLinks(categoryDTO);
 		
 		logger.info(">>> Returning response.");
 		
@@ -56,7 +56,7 @@ public class CategoryService {
 		
 		
 		CategoryResponseDTO categoryDTO = categoryMapper.converterToDto(categoryPersisted);
-		EntityModel<CategoryResponseDTO> response = categoryMapper.addHateoasLinks(categoryDTO);
+		EntityModel<CategoryResponseDTO> response = CategoryMapper.addHateoasLinks(categoryDTO);
 		
 		logger.info(">>> Returning response.");
 		
@@ -76,7 +76,7 @@ public class CategoryService {
 				.toList();
 		
 		List<EntityModel<CategoryResponseDTO>> responsesDTO = categoriesDTO.stream()
-				.map((categoryDTO) -> categoryMapper.addHateoasLinks(categoryDTO))
+				.map((categoryDTO) -> CategoryMapper.addHateoasLinks(categoryDTO))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -94,7 +94,7 @@ public class CategoryService {
 		Category categoryUpdated = updateData(categoryPersisted, request);
 		
 		CategoryResponseDTO categoryDTO = categoryMapper.converterToDto(categoryRepository.save(categoryUpdated));
-		EntityModel<CategoryResponseDTO> response = categoryMapper.addHateoasLinks(categoryDTO);
+		EntityModel<CategoryResponseDTO> response = CategoryMapper.addHateoasLinks(categoryDTO);
 		
 		logger.info(">>> Returning response.");
 		

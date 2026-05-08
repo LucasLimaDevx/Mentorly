@@ -47,7 +47,7 @@ public class CategoryMapper {
 		return response;
 	}
 	
-	public EntityModel<CategoryResponseDTO> addHateoasLinks(CategoryResponseDTO categoryDTO) {
+	public static EntityModel<CategoryResponseDTO> addHateoasLinks(CategoryResponseDTO categoryDTO) {
 		Long id = categoryDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		EntityModel<CategoryResponseDTO> model =  EntityModel.of(categoryDTO,
