@@ -34,7 +34,7 @@ public class MockEnrollment {
 	public List<Enrollment> mockEntityList() throws ParseException{
 		List<Enrollment> list = new ArrayList<>();
 		
-		for(int i = 1 ; i < 14 ; i++) {
+		for(int i = 0 ; i < 14 ; i++) {
 			list.add(mockEntity(i));
 		}
 		
@@ -44,7 +44,7 @@ public class MockEnrollment {
 	public List<EnrollmentResponseDTO> mockResponseDTOList() throws ParseException{
 		List<EnrollmentResponseDTO> list = new ArrayList<>();
 		
-		for(int i = 1 ; i < 14 ; i++) {
+		for(int i = 0 ; i < 14 ; i++) {
 			list.add(mockResponseDTO(i));
 		}
 		
@@ -69,7 +69,7 @@ public class MockEnrollment {
 		return enrollment;
 	}
 	
-	public EnrollmentResponseDTO mockResponseDTO(Integer number) throws ParseException {
+	public EnrollmentResponseDTO mockResponseDTO(Integer number) throws ParseException {	
 		MockCourse mock = new MockCourse();
 		CourseResponseDTO courseDTO = mock.mockResponseDTO(number);
 		
@@ -81,7 +81,6 @@ public class MockEnrollment {
 	}
 	
 	public EnrollmentRequestDTO mockRequestDTO(Integer number) throws ParseException {
-		
 		return new EnrollmentRequestDTO((number % 2 == 0) ? 50 : 300, number.longValue());
 	}
 	

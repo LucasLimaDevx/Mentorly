@@ -6,6 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
@@ -118,16 +121,16 @@ class EnrollmentServiceTest {
 			.thenAnswer(invocation -> enrollmentsDTO.get(index.getAndIncrement()));
 		
 		var result = enrollmentService.findAll(1L, "USER");
-		System.out.println(enrollmentsDTO.size());
+		
 		assertNotNull(result);
 		assertEquals(1, result.size());
 		
 		EnrollmentResponseDTO enrollmentOne = result.get(0).getContent();
 		assertNotNull(enrollmentOne.course());
-		assertEquals(1L, enrollmentOne.id());
-		assertEquals(300, enrollmentOne.progressPercentage());
+		assertEquals(0L, enrollmentOne.id());
+		assertEquals(50, enrollmentOne.progressPercentage());
 		assertEquals("12/07/2026 10:00", formatter.format(enrollmentOne.enrollmentDate()));
-		
+				
 	}
 	
 	@Test
@@ -145,9 +148,9 @@ class EnrollmentServiceTest {
 		
 		
 		assertNotNull(result);
-		assertEquals(13, result.size());
+		assertEquals(14, result.size());
 		
-		EnrollmentResponseDTO enrollmentOne = result.get(0).getContent();
+		EnrollmentResponseDTO enrollmentOne = result.get(1).getContent();
 		
 		assertNotNull(enrollmentOne.course());
 		assertEquals(1L, enrollmentOne.id());
@@ -155,11 +158,18 @@ class EnrollmentServiceTest {
 		assertEquals("12/07/2026 10:00", formatter.format(enrollmentOne.enrollmentDate()));
 		
 
-		EnrollmentResponseDTO enrollmentEight = result.get(7).getContent();
+		EnrollmentResponseDTO enrollmentEight = result.get(8).getContent();
 		assertNotNull(enrollmentEight.course());
 		assertEquals(8L, enrollmentEight.id());
 		assertEquals(50, enrollmentEight.progressPercentage());
 		assertEquals("12/07/2026 10:00", formatter.format(enrollmentEight.enrollmentDate()));
+		
+
+		EnrollmentResponseDTO enrollmentEleven = result.get(11).getContent();
+		assertNotNull(enrollmentEleven.course());
+		assertEquals(11L, enrollmentEleven.id());
+		assertEquals(300, enrollmentEleven.progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(enrollmentEleven.enrollmentDate()));
 	}
 
 	@Test
@@ -184,6 +194,11 @@ class EnrollmentServiceTest {
 
 	@Test
 	void delete() {
+		
+		enrollmentService.delete(1L);
+		
+		verify(enrollmentRepository, times(1)).deleteById(anyLong());
+		verifyNoMoreInteractions(enrollmentRepository);
 	}
 
 	
