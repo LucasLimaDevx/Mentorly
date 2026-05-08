@@ -123,7 +123,22 @@ class CategoryServiceTest {
 	}
 
 	@Test
-	void update() {
+	void update() throws ParseException {
+		
+		CategoryRequestDTO request = input.mockRequestDTO(1);
+		Category categoryPersisted = input.mockEntity(1);
+		CategoryResponseDTO response = input.mockResponseDTO(1);
+
+		when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(categoryPersisted));
+		when(categoryMapper.converterToDto(categoryRepository.save(any(Category.class)))).thenReturn(response);
+		
+		var result = categoryService.update(request, 1L);
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().id());
+		assertEquals(1L, result.getContent().id());
+		assertEquals("Title Test1", result.getContent().title());
+		assertEquals("Description Test1", result.getContent().description());
 
 	}
 
