@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
@@ -58,7 +60,7 @@ class EnrollmentServiceTest {
 		
 		input = new MockEnrollment();
 		formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		enrollmentService = new EnrollmentService(enrollmentRepository, certificateRepository, userRepository, courseRepository, enrollmentMapper);
+		enrollmentService = spy(new EnrollmentService(enrollmentRepository, certificateRepository, userRepository, courseRepository, enrollmentMapper));
 		
 	}
 
@@ -161,8 +163,23 @@ class EnrollmentServiceTest {
 	}
 
 	@Test
-	void update() {
+	void update() throws ParseException {
+		EnrollmentRequestDTO request = input.mockRequestDTO(1);
+		Enrollment enrollmentPersisted = input.mockEntity(1);
+		EnrollmentResponseDTO enrollmentDTO = input.mockResponseDTO(1);
 		
+		when(enrollmentRepository.findById(anyLong())).thenReturn(Optional.of(enrollmentPersisted));
+		when(enrollmentMapper.converterToDto(enrollmentRepository.save(any(Enrollment.class)))).thenReturn(enrollmentDTO);
+		doNothing().when(enrollmentService).addCertificate(any(Enrollment.class));
+		
+		var result = enrollmentService.update(request, 1L);
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().course());
+		assertEquals(1L, result.getContent().id());
+		assertEquals(300, result.getContent().progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().enrollmentDate()));
+
 	}
 
 	@Test
