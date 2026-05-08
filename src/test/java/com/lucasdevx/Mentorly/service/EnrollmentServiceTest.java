@@ -111,8 +111,20 @@ class EnrollmentServiceTest {
 
 	@Test
 	void findAllWithUserRole() throws ParseException {
-		List<Enrollment> enrollments = input.mockEntityList();
-		List<EnrollmentResponseDTO> enrollmentsDTO = input.mockResponseDTOList();
+		List<Enrollment> enrollments = 
+				List.of(input.mockEntity(1), 
+						input.mockEntity(2), 
+						input.mockEntity(3), 
+						input.mockEntity(1), 
+						input.mockEntity(2),
+						input.mockEntity(1),
+						input.mockEntity(2),
+						input.mockEntity(3));
+		
+		List<EnrollmentResponseDTO> enrollmentsDTO = 
+				 List.of(input.mockResponseDTO(1), 
+						 input.mockResponseDTO(1),
+					     input.mockResponseDTO(1));
 		
 		AtomicInteger index = new AtomicInteger();
 		
@@ -123,14 +135,19 @@ class EnrollmentServiceTest {
 		var result = enrollmentService.findAll(1L, "USER");
 		
 		assertNotNull(result);
-		assertEquals(1, result.size());
+		assertEquals(3, result.size());
 		
 		EnrollmentResponseDTO enrollmentOne = result.get(0).getContent();
 		assertNotNull(enrollmentOne.course());
-		assertEquals(0L, enrollmentOne.id());
-		assertEquals(50, enrollmentOne.progressPercentage());
+		assertEquals(1, enrollmentOne.id());
+		assertEquals(300, enrollmentOne.progressPercentage());
 		assertEquals("12/07/2026 10:00", formatter.format(enrollmentOne.enrollmentDate()));
 				
+		EnrollmentResponseDTO enrollmentTwo = result.get(1).getContent();
+		assertNotNull(enrollmentTwo.course());
+		assertEquals(1L, enrollmentTwo.id());
+		assertEquals(300, enrollmentTwo.progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(enrollmentTwo.enrollmentDate()));
 	}
 	
 	@Test
