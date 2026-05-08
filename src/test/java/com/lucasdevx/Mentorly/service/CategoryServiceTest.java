@@ -7,7 +7,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,7 +83,42 @@ class CategoryServiceTest {
 	}
 
 	@Test
-	void findAll() {
+	void findAll() throws ParseException {
+		List<Category> categories = input.mockEntityList();
+		List<CategoryResponseDTO> categoriesDTO = input.mockResponseDTOList();
+		AtomicInteger index = new AtomicInteger();
+		
+		when(categoryRepository.findAll()).thenReturn(categories);
+		when(categoryMapper.converterToDto(any(Category.class))).
+			thenAnswer(invocation -> categoriesDTO.get(index.getAndIncrement()));
+		
+		var result = categoryService.findAll();
+		
+		assertNotNull(result);
+		assertEquals(14, result.size());
+		
+		CategoryResponseDTO categoryOne = result.get(1).getContent();
+		
+		assertNotNull(categoryOne.id());
+		assertEquals(1L, categoryOne.id());
+		assertEquals("Title Test1", categoryOne.title());
+		assertEquals("Description Test1", categoryOne.description());
+		
+		
+		CategoryResponseDTO categoryEight = result.get(8).getContent();
+		
+		assertNotNull(categoryEight.id());
+		assertEquals(8L, categoryEight.id());
+		assertEquals("Title Test8", categoryEight.title());
+		assertEquals("Description Test8", categoryEight.description());
+		
+		CategoryResponseDTO categoryEleven = result.get(11).getContent();
+		
+		assertNotNull(categoryEleven.id());
+		assertEquals(11L, categoryEleven.id());
+		assertEquals("Title Test11", categoryEleven.title());
+		assertEquals("Description Test11", categoryEleven.description());
+		
 	
 	}
 
