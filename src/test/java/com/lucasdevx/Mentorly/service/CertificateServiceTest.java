@@ -4,11 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,13 +70,103 @@ class CertificateServiceTest {
 	}
 
 	@Test
-	void findAll() {
+	void findAllWithUserRole() throws ParseException {
+		List<Certificate> certificates = 
+				List.of(input.mockEntity(1), 
+						input.mockEntity(2), 
+						input.mockEntity(3), 
+						input.mockEntity(1), 
+						input.mockEntity(2),
+						input.mockEntity(1),
+						input.mockEntity(2),
+						input.mockEntity(3));
 		
+		List<CertificateResponseDTO> certificatesDTO = 
+			    List.of(input.mockResponseDTO(1), 
+						input.mockResponseDTO(1),
+						input.mockResponseDTO(1));
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(certificateRepository.findAll()).thenReturn(certificates);
+		when(certificateMapper.converterToDto(any(Certificate.class)))
+			.thenAnswer(invocation -> certificatesDTO.get(index.getAndIncrement()));
+		
+		var result = certificateService.findAll(1L, "USER");
+
+		assertNotNull(result);
+		assertEquals(3, result.size());
+		
+		CertificateResponseDTO certificateOne = result.get(0).getContent();
+		
+		assertNotNull(certificateOne);
+		assertNotNull(certificateOne.id());
+		assertNotNull(certificateOne.student());
+		assertNotNull(certificateOne.course());
+		assertEquals(1L, certificateOne.id());
+		assertEquals("12/07/2026 10:00", formatter.format(certificateOne.issueDate()));
+		
+		
+		CertificateResponseDTO certificateTwo = result.get(1).getContent();
+		
+		assertNotNull(certificateTwo);
+		assertNotNull(certificateTwo.id());
+		assertNotNull(certificateTwo.student());
+		assertNotNull(certificateTwo.course());
+		assertEquals(1L, certificateTwo.id());
+		assertEquals("12/07/2026 10:00", formatter.format(certificateTwo.issueDate()));
+	}
+	
+	@Test
+	void findAllWithAdminRole() throws ParseException {
+		List<Certificate> certificates = input.mockEntityList();
+		List<CertificateResponseDTO> certificatesDTO = input.mockResponseDTOList();
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(certificateRepository.findAll()).thenReturn(certificates);
+		when(certificateMapper.converterToDto(any(Certificate.class)))
+			.thenAnswer(invocation -> certificatesDTO.get(index.getAndIncrement()));
+		
+		var result = certificateService.findAll(1L, null);
+		
+		assertNotNull(result);
+		assertEquals(14, result.size());
+		
+		CertificateResponseDTO certificateOne = result.get(1).getContent();
+		
+		assertNotNull(certificateOne);
+		assertNotNull(certificateOne.id());
+		assertNotNull(certificateOne.student());
+		assertNotNull(certificateOne.course());
+		assertEquals(1L, certificateOne.id());
+		assertEquals("12/07/2026 10:00", formatter.format(certificateOne.issueDate()));
+		
+		CertificateResponseDTO certificateSix = result.get(6).getContent();
+		
+		assertNotNull(certificateSix);
+		assertNotNull(certificateSix.id());
+		assertNotNull(certificateSix.student());
+		assertNotNull(certificateSix.course());
+		assertEquals(6L, certificateSix.id());
+		assertEquals("12/07/2026 10:00", formatter.format(certificateSix.issueDate()));
+		
+		CertificateResponseDTO certificateEleven = result.get(11).getContent();
+		
+		assertNotNull(certificateEleven);
+		assertNotNull(certificateEleven.id());
+		assertNotNull(certificateEleven.student());
+		assertNotNull(certificateEleven.course());
+		assertEquals(11L, certificateEleven.id());
+		assertEquals("12/07/2026 10:00", formatter.format(certificateEleven.issueDate()));
 	}
 
 	@Test
 	void delete() {
+		certificateService.delete(1L);
 		
+		verify(certificateRepository, times(1)).deleteById(anyLong());
+		verifyNoMoreInteractions(certificateRepository);
 	}
 
 }

@@ -51,6 +51,7 @@ public class MockCertificate {
 	    Certificate certificate = new Certificate();
 		MockUser userMock = new MockUser();
 		MockCourse courseMock = new MockCourse();
+		
 		User user = userMock.mockEntity(number);
 		Course course = courseMock.mockEntity(number);
 		

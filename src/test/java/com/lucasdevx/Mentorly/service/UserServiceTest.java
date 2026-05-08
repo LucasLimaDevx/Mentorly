@@ -176,7 +176,6 @@ class UserServiceTest {
 
 		UserResponseDTO userOne = result.get(1).getContent();
 		
-		System.out.println(result);
 		assertNotNull(userOne);
 		assertNotNull(userOne.id());
 		assertEquals(1L, userOne.id());
