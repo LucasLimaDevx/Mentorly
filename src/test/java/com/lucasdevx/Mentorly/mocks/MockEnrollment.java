@@ -8,6 +8,7 @@ import java.util.List;
 import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
 import com.lucasdevx.Mentorly.dto.response.CourseResponseDTO;
 import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
+import com.lucasdevx.Mentorly.model.Course;
 import com.lucasdevx.Mentorly.model.Enrollment;
 import com.lucasdevx.Mentorly.model.User;
 
@@ -33,7 +34,7 @@ public class MockEnrollment {
 	public List<Enrollment> mockEntityList() throws ParseException{
 		List<Enrollment> list = new ArrayList<>();
 		
-		for(int i = 0 ; i < 14 ; i++) {
+		for(int i = 1 ; i < 14 ; i++) {
 			list.add(mockEntity(i));
 		}
 		
@@ -43,7 +44,7 @@ public class MockEnrollment {
 	public List<EnrollmentResponseDTO> mockResponseDTOList() throws ParseException{
 		List<EnrollmentResponseDTO> list = new ArrayList<>();
 		
-		for(int i = 0 ; i < 14 ; i++) {
+		for(int i = 1 ; i < 14 ; i++) {
 			list.add(mockResponseDTO(i));
 		}
 		
@@ -51,8 +52,11 @@ public class MockEnrollment {
 	}
 	
 	public Enrollment mockEntity(Integer number) throws ParseException {
-		MockUser mock = new MockUser();
-		User user = mock.mockEntity(number);
+		MockUser mockUser = new MockUser();
+		MockCourse mockCourse = new MockCourse();
+		
+		User user = mockUser.mockEntity(number);
+		Course course = mockCourse.mockEntity(number);
 		
 		Enrollment enrollment = new Enrollment();
 		
@@ -60,6 +64,7 @@ public class MockEnrollment {
 		enrollment.setProgressPercentage((number % 2 == 0) ? 50 : 300);
 		enrollment.setEnrollmentDate(formatter.parse("12/07/2026 10:00"));
 		enrollment.setUser(user);
+		enrollment.setCourse(course);
 		
 		return enrollment;
 	}
@@ -70,7 +75,7 @@ public class MockEnrollment {
 		
 		return new EnrollmentResponseDTO(
 						number.longValue(),
-						formatter.parse("12/07/2026 14:29"),
+						formatter.parse("12/07/2026 10:00"),
 						(number % 2 == 0) ? 50 : 300,
 						courseDTO);
 	}

@@ -1,0 +1,174 @@
+package com.lucasdevx.Mentorly.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.lucasdevx.Mentorly.dto.request.EnrollmentRequestDTO;
+import com.lucasdevx.Mentorly.dto.response.EnrollmentResponseDTO;
+import com.lucasdevx.Mentorly.mapper.EnrollmentMapper;
+import com.lucasdevx.Mentorly.mocks.MockEnrollment;
+import com.lucasdevx.Mentorly.model.Enrollment;
+import com.lucasdevx.Mentorly.repository.CertificateRepository;
+import com.lucasdevx.Mentorly.repository.CourseRepository;
+import com.lucasdevx.Mentorly.repository.EnrollmentRepository;
+import com.lucasdevx.Mentorly.repository.UserRepository;
+
+@TestInstance(Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
+class EnrollmentServiceTest {
+
+	@Mock
+	EnrollmentRepository enrollmentRepository;
+	
+	@Mock
+	CourseRepository courseRepository;
+	
+	@Mock
+	UserRepository userRepository;
+	
+	@Mock
+	CertificateRepository certificateRepository;
+	
+	@Mock
+	EnrollmentMapper enrollmentMapper;
+	
+	MockEnrollment input;
+	EnrollmentService enrollmentService;
+	SimpleDateFormat formatter;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		
+		input = new MockEnrollment();
+		formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		enrollmentService = new EnrollmentService(enrollmentRepository, certificateRepository, userRepository, courseRepository, enrollmentMapper);
+		
+	}
+
+
+	@Test
+	void create() throws ParseException {
+		EnrollmentRequestDTO request = input.mockRequestDTO(1);
+		Enrollment enrollment = input.mockEntity(1);
+		Enrollment enrollmentPersisted = enrollment;
+		EnrollmentResponseDTO response = input.mockResponseDTO(1);
+		
+		when(enrollmentMapper.converterToEntity(any(EnrollmentRequestDTO.class))).thenReturn(enrollment);
+		when(courseRepository.findById(anyLong())).thenReturn(Optional.of(enrollment.getCourse()));
+		when(userRepository.findById(anyLong())).thenReturn(Optional.of(enrollment.getUser()));
+		when(enrollmentRepository.save(any(Enrollment.class))).thenReturn(enrollmentPersisted);
+		when(enrollmentMapper.converterToDto(any(Enrollment.class))).thenReturn(response);
+		
+		var result = enrollmentService.create(request, 1L, "USER");
+	
+		assertNotNull(result);
+		assertNotNull(result.getContent().course());
+		assertEquals(1L, result.getContent().id());
+		assertEquals(300, result.getContent().progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().enrollmentDate()));
+		
+		
+	}
+
+	@Test
+	void findById() throws ParseException {
+		Enrollment enrollmentPersisted = input.mockEntity(1);
+		EnrollmentResponseDTO enrollmentDTO = input.mockResponseDTO(1);
+		
+		when(enrollmentRepository.findById(anyLong())).thenReturn(Optional.of(enrollmentPersisted));
+		when(enrollmentMapper.converterToDto(any(Enrollment.class))).thenReturn(enrollmentDTO);
+		
+		var result = enrollmentService.findById(1L);
+		
+		assertNotNull(result);
+		assertNotNull(result.getContent().course());
+		assertEquals(1L, result.getContent().id());
+		assertEquals(300, result.getContent().progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(result.getContent().enrollmentDate()));
+	}
+
+	@Test
+	void findAllWithUserRole() throws ParseException {
+		List<Enrollment> enrollments = input.mockEntityList();
+		List<EnrollmentResponseDTO> enrollmentsDTO = input.mockResponseDTOList();
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(enrollmentRepository.findAll()).thenReturn(enrollments);
+		when(enrollmentMapper.converterToDto(any(Enrollment.class)))
+			.thenAnswer(invocation -> enrollmentsDTO.get(index.getAndIncrement()));
+		
+		var result = enrollmentService.findAll(1L, "USER");
+		System.out.println(enrollmentsDTO.size());
+		assertNotNull(result);
+		assertEquals(1, result.size());
+		
+		EnrollmentResponseDTO enrollmentOne = result.get(0).getContent();
+		assertNotNull(enrollmentOne.course());
+		assertEquals(1L, enrollmentOne.id());
+		assertEquals(300, enrollmentOne.progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(enrollmentOne.enrollmentDate()));
+		
+	}
+	
+	@Test
+	void findAllWithAdminRole() throws ParseException {
+		List<Enrollment> enrollments = input.mockEntityList();
+		List<EnrollmentResponseDTO> enrollmentsDTO = input.mockResponseDTOList();
+		
+		AtomicInteger index = new AtomicInteger();
+		
+		when(enrollmentRepository.findAll()).thenReturn(enrollments);
+		when(enrollmentMapper.converterToDto(any(Enrollment.class)))
+			.thenAnswer(invocation -> enrollmentsDTO.get(index.getAndIncrement()));
+		
+		var result = enrollmentService.findAll(1L, null);
+		
+		
+		assertNotNull(result);
+		assertEquals(13, result.size());
+		
+		EnrollmentResponseDTO enrollmentOne = result.get(0).getContent();
+		
+		assertNotNull(enrollmentOne.course());
+		assertEquals(1L, enrollmentOne.id());
+		assertEquals(300, enrollmentOne.progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(enrollmentOne.enrollmentDate()));
+		
+
+		EnrollmentResponseDTO enrollmentEight = result.get(7).getContent();
+		assertNotNull(enrollmentEight.course());
+		assertEquals(8L, enrollmentEight.id());
+		assertEquals(50, enrollmentEight.progressPercentage());
+		assertEquals("12/07/2026 10:00", formatter.format(enrollmentEight.enrollmentDate()));
+	}
+
+	@Test
+	void update() {
+		
+	}
+
+	@Test
+	void delete() {
+	}
+
+	
+
+}

@@ -47,7 +47,7 @@ public class EnrollmentMapper {
 		return response;
 	}
 	
-	public EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO, String role) {
+	public static EntityModel<EnrollmentResponseDTO> addHateoasLinks(EnrollmentResponseDTO enrollmentDTO, String role) {
 		Long id = enrollmentDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		

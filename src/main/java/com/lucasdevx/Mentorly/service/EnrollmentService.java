@@ -72,7 +72,7 @@ public class EnrollmentService {
 		logger.info(">>> The entity was saved in the database.");
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentPersisted);
-		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, role);
+		EntityModel<EnrollmentResponseDTO> response = EnrollmentMapper.addHateoasLinks(enrollmentDTO, role);
 		
 		logger.info(">>> Returning response.");
 		
@@ -90,7 +90,7 @@ public class EnrollmentService {
 		logger.info(">>> The entity was found.");
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentPersisted);
-		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, null);
+		EntityModel<EnrollmentResponseDTO> response = EnrollmentMapper.addHateoasLinks(enrollmentDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -112,7 +112,7 @@ public class EnrollmentService {
 					.toList();
 			
 			List<EntityModel<EnrollmentResponseDTO>> responsesDTO = enrollmentsDTO.stream()
-					.map((responseDTO) -> enrollmentMapper.addHateoasLinks(responseDTO, null)).toList();
+					.map((responseDTO) -> EnrollmentMapper.addHateoasLinks(responseDTO, null)).toList();
 				
 			logger.info(">>> Returning response.");
 			
@@ -125,7 +125,7 @@ public class EnrollmentService {
 				.toList();
 		
 		List<EntityModel<EnrollmentResponseDTO>> responsesDTO =  enrollmentsDTO.stream()
-				.map((enrollmentDTO) -> enrollmentMapper.addHateoasLinks(enrollmentDTO, role))
+				.map((enrollmentDTO) -> EnrollmentMapper.addHateoasLinks(enrollmentDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
@@ -144,7 +144,7 @@ public class EnrollmentService {
 		Enrollment enrollmentUpdated = updateData(enrollmentPersisted, request);
 		
 		EnrollmentResponseDTO enrollmentDTO = enrollmentMapper.converterToDto(enrollmentRepository.save(enrollmentUpdated));
-		EntityModel<EnrollmentResponseDTO> response = enrollmentMapper.addHateoasLinks(enrollmentDTO, null);
+		EntityModel<EnrollmentResponseDTO> response = EnrollmentMapper.addHateoasLinks(enrollmentDTO, null);
 		
 		if(request.progressPercentage() >= 100) {
 			addCertificate(enrollmentPersisted);
