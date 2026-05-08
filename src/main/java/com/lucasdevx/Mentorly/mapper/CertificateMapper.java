@@ -38,7 +38,7 @@ public class CertificateMapper {
 		return response;
 	}
 	
-	public EntityModel<CertificateResponseDTO> addHateoasLinks(CertificateResponseDTO certificateDTO, String role) {
+	public static EntityModel<CertificateResponseDTO> addHateoasLinks(CertificateResponseDTO certificateDTO, String role) {
 		Long id = certificateDTO.id();
 		logger.info(">>> Adding links HATEOAS.");
 		

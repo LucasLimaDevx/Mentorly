@@ -38,7 +38,7 @@ public class CertificateService {
 		logger.info(">>> The entity was found.");
 		
 		CertificateResponseDTO certificateDTO = certificateMapper.converterToDto(certificatePersisted);
-		EntityModel<CertificateResponseDTO> response = certificateMapper.addHateoasLinks(certificateDTO, null);
+		EntityModel<CertificateResponseDTO> response = CertificateMapper.addHateoasLinks(certificateDTO, null);
 		
 		logger.info(">>> Returning response.");
 		
@@ -61,7 +61,7 @@ public class CertificateService {
 					.toList();
 			
 			List<EntityModel<CertificateResponseDTO>> responsesDTO = certificatesDTO.stream()
-					.map((certificateDTO) -> certificateMapper.addHateoasLinks(certificateDTO, null))
+					.map((certificateDTO) -> CertificateMapper.addHateoasLinks(certificateDTO, null))
 					.toList();
 			
 			logger.info(">>> Returning response.");
@@ -74,7 +74,7 @@ public class CertificateService {
 				.toList();
 		
 		List<EntityModel<CertificateResponseDTO>> responsesDTO = certificatesDTO.stream()
-				.map((certificateDTO) -> certificateMapper.addHateoasLinks(certificateDTO, role))
+				.map((certificateDTO) -> CertificateMapper.addHateoasLinks(certificateDTO, role))
 				.toList();
 		
 		logger.info(">>> Returning response.");
