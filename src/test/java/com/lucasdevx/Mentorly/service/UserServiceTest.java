@@ -74,9 +74,39 @@ class UserServiceTest {
 		when(userMapper.converterToEntity(request)).thenReturn(user);
 		when(userRepository.save(user)).thenReturn(userPersisted);
 		when(userMapper.converterToDto(userPersisted)).thenReturn(response);
+		
 		var result = userService.create(request, request.role());
+
 		
 		assertNotNull(result);
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("updateAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("deleteAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("DELETE")
+						
+		));
+		
+		
 		assertNotNull(result.getContent().id());
 		assertEquals(2L, result.getContent().id());
 		assertEquals("First Name Test2", result.getContent().firstName());
@@ -102,6 +132,51 @@ class UserServiceTest {
 		var result = userService.create(request, "admin");
 		
 		assertNotNull(result);
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("self") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("create") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("ṔOST")
+						
+		));
+		
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAll") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("update") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("delete") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("DELETE")
+						
+		));
+		
+		
 		assertNotNull(result.getContent().id());
 		assertEquals(1L, result.getContent().id());
 		assertEquals("First Name Test1", result.getContent().firstName());
@@ -125,6 +200,34 @@ class UserServiceTest {
 		var result = userService.findById(2L);
 		
 		assertNotNull(result);
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("updateAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("deleteAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("DELETE")
+						
+		));
+		
+		assertNotNull(result);
 		assertNotNull(result.getContent().id());
 		assertEquals(2L, result.getContent().id());
 		assertEquals("First Name Test2", result.getContent().firstName());
@@ -146,6 +249,49 @@ class UserServiceTest {
 		when(userMapper.converterToDto(userPersisted)).thenReturn(response);
 		
 		var result = userService.findById(1L);
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("self") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("create") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("ṔOST")
+						
+		));
+		
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAll") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("update") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("delete") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("DELETE")
+						
+		));
 		
 		assertNotNull(result);
 		assertNotNull(result.getContent().id());
@@ -186,9 +332,82 @@ class UserServiceTest {
 		assertEquals("12/07/2026 10:00", formatter.format(userOne.createdAt()));
 		assertEquals("12/07/2026 10:00", formatter.format(userOne.uptedAt()));
 		
+		
+		assertNotNull(result.get(1).getLinks());
+		
+		assertNotNull(result.get(1).getLinks());
+		assertNotNull(result.get(1).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("self") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.get(1).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("create") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("ṔOST")
+						
+		));
+		
+		
+		assertNotNull(result.get(1).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAll") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.get(1).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("update") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.get(1).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("delete") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("DELETE")
+						
+		));
+		
 		UserResponseDTO userTwo = result.get(2).getContent();
 		
 		assertNotNull(userTwo);
+		assertNotNull(result);
+		assertNotNull(result.get(2).getLinks());
+		assertNotNull(result.get(2).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.get(2).getLinks());
+		assertNotNull(result.get(2).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("updateAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.get(2).getLinks());
+		assertNotNull(result.get(2).getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("deleteAuthStudent") &&
+				                link.getHref().endsWith("/users/v1/me") &&
+				                link.getType().equals("DELETE")
+						
+		));
+		
 		assertNotNull(userTwo.id());
 		assertEquals(2L, userTwo.id());
 		assertEquals("First Name Test2", userTwo.firstName());
@@ -236,6 +455,50 @@ class UserServiceTest {
 		var result = userService.update(request, 1L, request.role());
 		
 		assertNotNull(result);
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("self") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("create") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("ṔOST")
+						
+		));
+		
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("findAll") &&
+				                link.getHref().endsWith("/users/v1") &&
+				                link.getType().equals("GET")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("update") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("UPDATE")
+						
+		));
+		
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(
+						link -> link.getRel().value().equals("delete") &&
+				                link.getHref().endsWith("/users/v1/1") &&
+				                link.getType().equals("DELETE")
+						
+		));
+		
 		assertNotNull(result.getContent().id());
 		assertEquals(1L, result.getContent().id());
 		assertEquals("First Name Test1", result.getContent().firstName());

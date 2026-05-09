@@ -83,6 +83,31 @@ class EnrollmentServiceTest {
 		
 		var result = enrollmentService.create(request, 1L, "USER");
 	
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(link -> 
+					link.getRel().value().equals("self") &&
+					link.getHref().endsWith("/users/v1/me") &&
+					link.getType().equals("GET")
+		));
+		
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(link -> 
+					link.getRel().value().equals("updateAuthStudent") &&
+					link.getHref().endsWith("/users/v1/me") &&
+					link.getType().equals("UPDATE")
+		));
+		
+		assertNotNull(result.getLinks());
+		assertNotNull(result.getLinks().stream()
+				.anyMatch(link -> 
+					link.getRel().value().equals("deleteAuthStudent") &&
+					link.getHref().endsWith("/users/v1/me") &&
+					link.getType().equals("DELETE")
+		));
+		
 		assertNotNull(result);
 		assertNotNull(result.getContent().course());
 		assertEquals(1L, result.getContent().id());
@@ -91,7 +116,8 @@ class EnrollmentServiceTest {
 		
 		
 	}
-
+	
+	
 	@Test
 	void findById() throws ParseException {
 		Enrollment enrollmentPersisted = input.mockEntity(1);
